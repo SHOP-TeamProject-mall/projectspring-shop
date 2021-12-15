@@ -30,6 +30,9 @@ public class Member {
     @Column(name = "MEMBER_PW")
     private String memberpw;
 
+    @Column(name = "MEMBER_NAME")
+    private String membername;
+
     @Column(name = "MEMBER_EMAIL")
     private String memberemail;
 
@@ -45,7 +48,4 @@ public class Member {
     @Column(name = "CREATETIME", updatable = false)
     @CreationTimestamp
     private Date createtime;
-    
-
-
 }

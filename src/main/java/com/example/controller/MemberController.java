@@ -1,5 +1,6 @@
 package com.example.controller;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,7 +31,6 @@ public class MemberController {
     MemberService memberService;
 
     // 127.0.0.1:8080/HOST/member/memberjoin.json
-    // 
     @PostMapping(value = "/memberjoin.json", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Map<String, Object> MemberJoinPost(@RequestBody Member member) {
         System.out.println("MEMBER:" + member.toString());
@@ -42,7 +42,25 @@ public class MemberController {
         } catch (Exception e) {
             e.printStackTrace();
             map.put("status", e.hashCode());
+        }
+        return map;
+    }
+
+    // 127.0.0.1:8080/HOST/member/memberlogin.json
+    @PostMapping(value = "/memberlogin.json", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Map<String, Object> MemberLoginPost(@RequestBody Member member) throws IOException {
+        Map<String, Object> map = new HashMap<>();
+        try {
+            int ret = memberService.LoginMember(member);
+            if (ret == 1) {
+                map.put("status", 200); // 로그인 성공 시
+                map.put("token", jwtUtil.generateToken(member.getMemberid()));
+            } else if (ret == -1) {
+                map.put("status", -1); // DB에 존재하지 않는 회원
             }
+        } catch (Exception e) {
+            map.put("status", e.hashCode());
+        }
         return map;
     }
 }

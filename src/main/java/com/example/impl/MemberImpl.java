@@ -49,7 +49,16 @@ public class MemberImpl implements MemberService {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(member.getMemberid(), member.getMemberpw()));
                     String roles = authentication.getAuthorities().iterator().next().toString(); // 권한값추가
-                        return 0;
+                    if (member.getMemberrole() == "USER") {
+                        if (roles.equals("USER")) {
+                            return 1; // 타입일치시 1
+                        }
+                    } else if (member.getMemberrole() == "ADMIN") {
+                        if (roles.equals("ADMIN")) {
+                            return 1;
+                        }
+                    }
+                    return 0; // 권한 불일치 시 0
             } catch (Exception e) {
                 e.printStackTrace();
                 return -1;
