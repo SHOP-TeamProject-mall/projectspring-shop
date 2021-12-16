@@ -48,4 +48,5 @@ public class Member {
     @Column(name = "CREATETIME", updatable = false)
     @CreationTimestamp
     private Date createtime;
+
 }

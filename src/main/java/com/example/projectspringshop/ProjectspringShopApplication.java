@@ -7,10 +7,9 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-
 @SpringBootApplication(exclude = SecurityAutoConfiguration.class)
 @ComponentScan(basePackages = { "com.example.controller", "com.example.service", "com.example.security",
-		"com.example.jwt","com.example.impl"})
+		"com.example.jwt", "com.example.impl", "com.example.mybatis" })
 @EntityScan(basePackages = { "com.example.entity" })
 @EnableJpaRepositories(basePackages = { "com.example.repository" })
 public class ProjectspringShopApplication {

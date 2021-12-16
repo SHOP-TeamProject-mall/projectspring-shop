@@ -23,8 +23,9 @@ public interface MemberService {
     public Member SelectMember(Member member);
 
     // 회원 아이디 중복체크
-    public int IdCheck(Member member);
+    public int IdCheck(String memberid);
 
-
+    // 회원 아이디 찾기 (일단 이름)
+    public int IdFind(String memberid);
 
 }

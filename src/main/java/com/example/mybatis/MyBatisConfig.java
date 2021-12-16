@@ -24,5 +24,4 @@ public class MyBatisConfig {
         sqlSessionFactoryBean.setMapperLocations(arrResource);
         return sqlSessionFactoryBean.getObject();
     }
-
 }

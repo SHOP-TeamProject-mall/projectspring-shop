@@ -48,20 +48,20 @@ public class MemberImpl implements MemberService {
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(member.getMemberid(), member.getMemberpw()));
-                    String roles = authentication.getAuthorities().iterator().next().toString(); // 권한값추가
-                    if (member.getMemberrole() == "USER") {
-                        if (roles.equals("USER")) {
-                            return 1; // 타입일치시 1
-                        }
-                    } else if (member.getMemberrole() == "ADMIN") {
-                        if (roles.equals("ADMIN")) {
-                            return 1;
-                        }
-                    }
-                    return 0; // 권한 불일치 시 0
-            } catch (Exception e) {
-                e.printStackTrace();
-                return -1;
+            String roles = authentication.getAuthorities().iterator().next().toString(); // 권한값추가
+            if (member.getMemberrole() == "USER") {
+                if (roles.equals("USER")) {
+                    return 1; // 타입일치시 1
+                }
+            } else if (member.getMemberrole() == "ADMIN") {
+                if (roles.equals("ADMIN")) {
+                    return 1;
+                }
+            }
+            return 0; // 권한 불일치 시 0
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1;
         }
     }
 
@@ -78,9 +78,23 @@ public class MemberImpl implements MemberService {
     }
 
     @Override
-    public int IdCheck(Member member) {
-        // TODO Auto-generated method stub
-        return 0;
+    public int IdCheck(String memberid) {
+        try {
+            return sqlSessionFactory.openSession().selectOne("Member.IdCheck", memberid);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
+    @Override
+    public int IdFind(String memberid) {
+        try {
+            return sqlSessionFactory.openSession().selectOne("Member.IdFind", memberid);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1;
+        }
     }
 
 }
