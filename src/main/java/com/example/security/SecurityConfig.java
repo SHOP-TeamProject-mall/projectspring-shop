@@ -52,9 +52,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         // 권한 설정
-        http.authorizeRequests().antMatchers("/admin", "/admin/*").hasAuthority("ADMIN")
-                .antMatchers("/seller", "/seller/*").hasAnyAuthority("ADMIN", "SELLER").antMatchers("/user", "/user/*")
-                .hasAnyAuthority("ADMIN", "USER").anyRequest().permitAll().and();
+        http.authorizeRequests()
+                .antMatchers("/admin", "/admin/*").hasAuthority("ADMIN")
+                .antMatchers("/seller", "/seller/*").hasAnyAuthority("SELLER")
+                .antMatchers("/user", "/user/*").hasAnyAuthority("USER")
+                .anyRequest().permitAll().and();
 
         // 로그인 페이지
         // http.formLogin()

@@ -7,5 +7,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface MemberJoinImageRepository extends JpaRepository<MemberJoinImage, Long> {
-    
+ 
+        MemberJoinImage findByMember_memberid(String no);
+
 }

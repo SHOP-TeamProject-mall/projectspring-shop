@@ -43,7 +43,7 @@ public class Member {
     private String memberphone;
 
     @Column(name = "MEMBER_ROLE")
-    private String memberrole;
+    private String memberrole = null;
 
     @Column(name = "CREATETIME", updatable = false)
     @CreationTimestamp

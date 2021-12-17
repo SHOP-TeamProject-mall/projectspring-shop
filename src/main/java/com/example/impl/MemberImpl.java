@@ -44,21 +44,20 @@ public class MemberImpl implements MemberService {
     }
 
     @Override
-    public int LoginMember(Member member) {
+    public int LoginMember(Member member) { // equals 명령어 (문자열 비교)
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(member.getMemberid(), member.getMemberpw()));
             String roles = authentication.getAuthorities().iterator().next().toString(); // 권한값추가
-            if (member.getMemberrole() == "USER") {
-                if (roles.equals("USER")) {
-                    return 1; // 타입일치시 1
-                }
-            } else if (member.getMemberrole() == "ADMIN") {
-                if (roles.equals("ADMIN")) {
-                    return 1;
-                }
+            // System.out.println(" roles : -> " + roles);
+            // System.out.println(" member.getMemberrole : -> " + member.getMemberrole());
+            // System.out.println(" member.getMemberid : -> " + member.getMemberid());
+            // System.out.println(" member.getMemberid : -> " + member.getMemberid());
+            if (roles.equals("USER")) {
+                return 1;
+            } else {
+                return 0;
             }
-            return 0; // 권한 불일치 시 0
         } catch (Exception e) {
             e.printStackTrace();
             return -1;

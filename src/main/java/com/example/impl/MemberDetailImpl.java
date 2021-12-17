@@ -24,7 +24,7 @@ public class MemberDetailImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
         Member member = memberRepository.findById(id).orElse(null);
         if (member != null) {
-            String[] role = { member.getMemberrole() };
+            String[] role = {member.getMemberrole()};
             Collection<GrantedAuthority> roles = AuthorityUtils.createAuthorityList(role);
             User user = new User(member.getMemberid(), member.getMemberpw(), roles);
             return user;
