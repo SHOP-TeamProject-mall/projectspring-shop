@@ -25,7 +25,6 @@ public class ProductController {
     //127.0.0.1:8080/HOST/product/insertproduct.json
     @PostMapping(value="/insertproduct.json", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Object insertProduct(@RequestBody Product product) {
-        
         Map<String, Object> map = new HashMap<>();
         try{
             long no = pService.inserProduct(product);
