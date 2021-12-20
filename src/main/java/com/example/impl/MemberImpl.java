@@ -1,5 +1,7 @@
 package com.example.impl;
 
+import java.util.Optional;
+
 import com.example.entity.Member;
 import com.example.repository.MemberRepository;
 import com.example.service.MemberService;
@@ -39,7 +41,7 @@ public class MemberImpl implements MemberService {
 
     @Override
     public int UpdateMember(Member member) {
-        // TODO Auto-generated method stub
+        memberRepository.save(member);
         return 0;
     }
 
@@ -71,9 +73,9 @@ public class MemberImpl implements MemberService {
     }
 
     @Override
-    public Member SelectMember(Member member) {
-        // TODO Auto-generated method stub
-        return null;
+    public Member SelectMember(String id) {
+        Optional<Member> member = memberRepository.findById(id);
+        return member.orElse(null); // 없으면 null 리턴
     }
 
     @Override

@@ -20,7 +20,7 @@ public interface MemberService {
     public int DeleteMember(Member member);
 
     // 회원 정보 가져오기
-    public Member SelectMember(Member member);
+    public Member SelectMember(String id);
 
     // 회원 아이디 중복체크
     public int IdCheck(String memberid);

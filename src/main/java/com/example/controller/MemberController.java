@@ -18,9 +18,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -46,7 +49,7 @@ public class MemberController {
     // 127.0.0.1:8080/HOST/member/memberjoin.json
     @PostMapping(value = "/memberjoin.json", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Map<String, Object> MemberJoinPost(@RequestBody Member member) {
-        System.out.println(" join -> " +  member.toString());
+        System.out.println(" join -> " + member.toString());
 
         // System.out.println("MEMBER:" + member.toString());
         Map<String, Object> map = new HashMap<>();
@@ -65,7 +68,7 @@ public class MemberController {
     // 127.0.0.1:8080/HOST/member/memberlogin.json
     @PostMapping(value = "/memberlogin.json", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Map<String, Object> MemberLoginPost(@RequestBody Member member) throws IOException {
-        System.out.println("++++++++++++" + member.toString());
+        // System.out.println("++++++++++++" + member.toString());
         // System.out.println("member : ->" + member.toString());
         Map<String, Object> map = new HashMap<>();
         try {
@@ -92,8 +95,7 @@ public class MemberController {
         try {
             map.put("status", 200);
         } catch (Exception e) {
-            e.printStackTrace();
-            map.put("status", e.hashCode());
+            e.printStackTrace();            map.put("status", e.hashCode());
         }
         return map;
     }
@@ -107,7 +109,7 @@ public class MemberController {
         try {
             int ret = memberService.IdCheck(memberid);
             map.put("status", 200);
-            map.put("idCheckchk", ret);
+            map.put("idCheckchk", ret); // 아이디가 중복이면 ret = 1
         } catch (Exception e) {
             e.printStackTrace();
             map.put("status", e.hashCode());
@@ -137,25 +139,35 @@ public class MemberController {
     // 127.0.0.1:8080/HOST/member/memberJoinImage.json?no=
     @PostMapping(value = "/memberJoinImage.json", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Map<String, Object> memberJoinImage(@RequestParam(name = "no") String no,
-            @RequestParam(name = "file") MultipartFile[] files) throws IOException {
+            @RequestParam(name = "file") MultipartFile files) throws IOException {
+        System.out.println("회원가입시 프로필 files : =>" + files);
         Map<String, Object> map = new HashMap<>();
         try {
             Member member = memberRepository.getById(no);
-            List<MemberJoinImage> list = new ArrayList<>();
-            for (int i = 0; i < files.length; i++) {
+            if (files != null) {
+                List<MemberJoinImage> list = new ArrayList<>();
                 MemberJoinImage memberJoinImage = new MemberJoinImage();
                 memberJoinImage.setMember(member);
-                memberJoinImage.setImage(files[i].getBytes());
-                memberJoinImage.setImagename(files[i].getOriginalFilename());
-                memberJoinImage.setImagesize(files[i].getSize());
-                memberJoinImage.setImagetype(files[i].getContentType());
+                memberJoinImage.setImage(files.getBytes());
+                memberJoinImage.setImagename(files.getOriginalFilename());
+                memberJoinImage.setImagesize(files.getSize());
+                memberJoinImage.setImagetype(files.getContentType());
                 list.add(memberJoinImage);
+                memberJoinImageRepository.saveAll(list);
             }
-            memberJoinImageRepository.saveAll(list);
+            // } else {
+            // MemberJoinImage memberJoinImage = new MemberJoinImage();
+            // memberJoinImage.setMember(member);
+            // memberJoinImage.setImage(null); // byte
+            // memberJoinImage.setImagename(""); // String
+            // memberJoinImage.setImagesize(0L); // long
+            // memberJoinImage.setImagetype(""); // String
+            // memberJoinImageRepository.save(memberJoinImage);
+            // }
             map.put("status", 200);
         } catch (Exception e) {
             e.printStackTrace();
-            map.put("status", 555);
+            map.put("status", e.hashCode());
 
         }
         return map;
@@ -184,4 +196,67 @@ public class MemberController {
             return null;
         }
     }
+
+    // 회원 정보 수정
+    // 127.0.0.1:8080/HOST/member/memberupdate.json
+    @PutMapping(value = "/memberupdate.json", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Map<String, Object> MemberUpdatePost(@RequestBody Member member, @RequestHeader("TOKEN") String token) {
+        // System.out.println("회원정보수정 -> " + member.toString());
+        Map<String, Object> map = new HashMap<>();
+        try {
+            String userid = jwtUtil.extractUsername(token);
+            Member member2 = memberService.SelectMember(userid); // 기존 회원정보 꺼내기
+            // System.out.println("기존 회원 정보 -> " +member2.toString());
+            // member2.setMemberid(member.getMemberid());
+            member2.setMembername(member.getMembername());
+            member2.setMemberphone(member.getMemberphone());
+            member2.setMemberaddress(member.getMemberaddress());
+            member2.setMemberemail(member.getMemberemail());
+            memberService.UpdateMember(member2);
+            map.put("success", 200);
+        } catch (Exception e) {
+            map.put("fail", e.hashCode());
+        }
+        return map;
+    }
+
+    // 회원 정보 가져오기
+    // 127.0.0.1:8080/HOST/member/memberlist.json
+	@GetMapping(value = "/memberlist.json", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public Object MemberListGET(@RequestHeader("token") String token) {
+		Map<String, Object> map = new HashMap<>();
+		try {
+			String userid = jwtUtil.extractUsername(token);
+			map.put("memberlist", memberService.SelectMember(userid));
+			map.put("status", 200);
+		} catch (Exception e) {
+			e.printStackTrace();
+			map.put("status", e.hashCode());
+		}
+		return map;
+	}
+
+    // 회원 비밀번호 변경
+    // 127.0.0.1:8080/HOST/member/memberpwupdate.json
+    @PostMapping(value = "/memberpwupdate.json", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Map<String, Object> updatepw(@RequestBody Member member, @RequestHeader("TOKEN") String token) {
+        Map<String, Object> map = new HashMap<>();
+        try {
+            String userid = jwtUtil.extractUsername(token);
+            Member member2 = memberService.SelectMember(userid); // 원래 회원정보 꺼내기
+            BCryptPasswordEncoder bcpe = new BCryptPasswordEncoder();
+            String newpw = bcpe.encode(member2.getMemberpw()); // 새 비밀번호
+            String oldpw = member2.getMemberpw(); // 원래비밀번호
+
+            if (bcpe.matches(member2.getMemberpw(), oldpw)) { // 원래비밀번호 확인후 새비밀번호
+                member2.setMemberpw(newpw); // 새비밀번호
+                memberRepository.save(member2);
+                map.put("success", 200);
+            }
+        } catch (Exception e) {
+            map.put("fail", e.hashCode());
+        }
+        return map;
+    }
+
 }

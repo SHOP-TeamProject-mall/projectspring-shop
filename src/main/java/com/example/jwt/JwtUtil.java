@@ -54,7 +54,6 @@ public class JwtUtil {
 
     // 토큰의 만료시간이 유효한지 확인
     public Boolean isTokenExpired(String token) {
-
         return this.extractExpiration(token).before(new Date());
     }
 }
