@@ -1,17 +1,26 @@
 package com.example.controller;
 
-import java.util.Date;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.example.entity.Product;
+import com.example.entity.ProductMainImage;
+import com.example.entity.ProductSubImage;
+import com.example.repository.ProductMainImageRepository;
+import com.example.repository.ProductRepository;
+import com.example.repository.ProductSubImageRepository;
 import com.example.service.ProductService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.bind.annotation.RequestBody;
 
 
@@ -21,6 +30,15 @@ public class ProductController {
     
     @Autowired
     ProductService pService;
+
+    @Autowired
+    ProductRepository pRepository;
+
+    @Autowired
+    ProductMainImageRepository productMainImageRepository;
+
+    @Autowired
+    ProductSubImageRepository productSubImageRepository;
 
     //127.0.0.1:8080/HOST/product/insertproduct.json
     @PostMapping(value="/insertproduct.json", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -36,6 +54,75 @@ public class ProductController {
             e.printStackTrace();
             map.put("status", e.hashCode());
         }
+        return map;
+    }
+
+    // 메인 이미지 한개등록
+    //127.0.0.1:8080/HOST/product/insertproduct_mainimage.json
+    @PostMapping(value="/insertproduct_mainimage.json", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Map<String, Object> InsertProduct_MainImage(
+        @RequestParam(name = "productno") long productno,
+        @RequestParam(name = "product_mainfile") MultipartFile files) throws IOException {
+        
+            Map<String, Object> map = new HashMap<>();
+            try{
+                Product product = pRepository.getById(productno);
+                if(files != null){
+                    ProductMainImage productMainImage = new ProductMainImage();
+                        productMainImage.setProduct(product);
+                        productMainImage.setProductmainimage(files.getBytes());
+                        productMainImage.setProductmainimagename(files.getOriginalFilename());
+                        productMainImage.setProductmainimagesize(files.getSize());
+                        productMainImage.setProductmainimagetype(files.getContentType());
+                        productMainImageRepository.save(productMainImage);
+                }
+                else{
+                    ProductMainImage productMainImage = new ProductMainImage();
+                        productMainImage.setProduct(product);
+                        productMainImage.setProductmainimage(null);
+                        productMainImage.setProductmainimagename("");
+                        productMainImage.setProductmainimagesize(0L);
+                        productMainImage.setProductmainimagetype("");
+                        productMainImageRepository.save(productMainImage);
+                }
+                map.put("status",200);
+            }
+            catch(Exception e){
+                e.printStackTrace();
+                map.put("status", e.hashCode());
+            }
+        
+        return map;
+    }
+    
+    // 서브 이미지 여러개 등록
+    //127.0.0.1:8080/HOST/product/insertproduct_subimage.json
+    @PostMapping(value="/insertproduct_subimage.json", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Map<String, Object> InsertProduct_SubImage(
+        @RequestParam(name = "productno") long productno,
+        @RequestParam(name = "product_subfile") MultipartFile[] files) throws IOException {
+
+            Map<String, Object> map = new HashMap<>();
+            try{
+                Product product = pRepository.getById(productno);
+                List<ProductSubImage> list = new ArrayList<>();
+                for(int i = 0; i < files.length; i++){
+                    ProductSubImage productSubImage = new ProductSubImage();
+                        productSubImage.setProduct(product);
+                        productSubImage.setProductsubimage(files[i].getBytes());
+                        productSubImage.setProductsubimagename(files[i].getOriginalFilename());
+                        productSubImage.setProductsubimagesize(files[i].getSize());
+                        productSubImage.setProductsubimagetype(files[i].getContentType());
+                        list.add(productSubImage);
+                }
+                productSubImageRepository.saveAll(list);
+                map.put("status", 200);
+            }
+            catch(Exception e){
+                e.printStackTrace();
+                map.put("status", e.hashCode());
+            }
+
         return map;
     }
     
