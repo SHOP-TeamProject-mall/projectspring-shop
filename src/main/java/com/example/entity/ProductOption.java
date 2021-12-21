@@ -25,6 +25,8 @@ import lombok.ToString;
 @Entity
 @NoArgsConstructor
 @SequenceGenerator(name = "SEQ_PRODUCT_OPTION", sequenceName = "SEQ_PRODUCTOPTION_NO", initialValue = 1, allocationSize = 1)
+
+@Table(name = "PRODUCTOPTION")
 public class ProductOption {
     
     @Id
