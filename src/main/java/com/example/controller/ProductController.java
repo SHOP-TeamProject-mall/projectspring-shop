@@ -102,6 +102,8 @@ public class ProductController {
         @RequestParam(name = "productno") long productno,
         @RequestParam(name = "product_subfile") MultipartFile[] files) throws IOException {
 
+            // System.out.println("productno : -> " + productno);
+
             Map<String, Object> map = new HashMap<>();
             try{
                 Product product = pRepository.getById(productno);

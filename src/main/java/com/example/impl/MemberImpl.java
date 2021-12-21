@@ -26,6 +26,9 @@ public class MemberImpl implements MemberService {
     @Autowired
     SqlSessionFactory sqlSessionFactory;
 
+    @Autowired
+    MemberService memberService;
+
     @Override
     public int InsertMember(Member member) {
         try {
@@ -50,6 +53,8 @@ public class MemberImpl implements MemberService {
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(member.getMemberid(), member.getMemberpw()));
+
+            System.out.println("authentication : => " + authentication);
             String roles = authentication.getAuthorities().iterator().next().toString(); // 권한값추가
             // System.out.println(" roles : -> " + roles);
             // System.out.println(" member.getMemberrole : -> " + member.getMemberrole());
@@ -98,4 +103,30 @@ public class MemberImpl implements MemberService {
         }
     }
 
+    @Override
+    public int MatchPwCheck(Member member) {
+        try {
+            BCryptPasswordEncoder bcpe = new BCryptPasswordEncoder();
+            String rawPw = member.getMemberpw(); // 원래 비밀번호
+            String encodedPw = bcpe.encode(member.getMemberpw()); // 새 비밀번호
+            // System.out.println("원래비밀번호 : => " + rawPw);
+            // System.out.println("새비밀번호 : => " + encodedPw);
+            if (bcpe.matches(rawPw, encodedPw)) { // 원래 비밀번호와 새 비밀번호 비교
+                if (rawPw != encodedPw) {
+                    member.setMemberpw(encodedPw);
+                    return 1;
+                }
+            }
+            return 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
+    @Override
+    public int PwCheck(String memberpw) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
 }

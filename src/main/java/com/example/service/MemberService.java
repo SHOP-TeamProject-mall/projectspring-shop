@@ -25,6 +25,12 @@ public interface MemberService {
     // 회원 아이디 중복체크
     public int IdCheck(String memberid);
 
+    // 회원 비밀번호 중복체크
+    public int PwCheck(String memberpw);
+
+    // 비밀번호 비교 (기존암호와 새 암호)
+    public int MatchPwCheck(Member member);
+
     // 회원 아이디 찾기 (일단 이름)
     public int IdFind(String memberid);
 

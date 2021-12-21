@@ -95,7 +95,8 @@ public class MemberController {
         try {
             map.put("status", 200);
         } catch (Exception e) {
-            e.printStackTrace();            map.put("status", e.hashCode());
+            e.printStackTrace();
+            map.put("status", e.hashCode());
         }
         return map;
     }
@@ -222,37 +223,62 @@ public class MemberController {
 
     // 회원 정보 가져오기
     // 127.0.0.1:8080/HOST/member/memberlist.json
-	@GetMapping(value = "/memberlist.json", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public Object MemberListGET(@RequestHeader("token") String token) {
-		Map<String, Object> map = new HashMap<>();
-		try {
-			String userid = jwtUtil.extractUsername(token);
-			map.put("memberlist", memberService.SelectMember(userid));
-			map.put("status", 200);
-		} catch (Exception e) {
-			e.printStackTrace();
-			map.put("status", e.hashCode());
-		}
-		return map;
-	}
+    @GetMapping(value = "/memberlist.json", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Object MemberListGET(@RequestHeader("token") String token) {
+        Map<String, Object> map = new HashMap<>();
+        try {
+            String userid = jwtUtil.extractUsername(token);
+            map.put("memberlist", memberService.SelectMember(userid));
+            map.put("status", 200);
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put("status", e.hashCode());
+        }
+        return map;
+    }
 
     // 회원 비밀번호 변경
     // 127.0.0.1:8080/HOST/member/memberpwupdate.json
     @PostMapping(value = "/memberpwupdate.json", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Map<String, Object> updatepw(@RequestBody Member member, @RequestHeader("TOKEN") String token) {
+        // System.out.println("암호변경 회원정보" + member.toString());
+        // System.out.println("암호변경 토큰 " + token);
         Map<String, Object> map = new HashMap<>();
         try {
             String userid = jwtUtil.extractUsername(token);
             Member member2 = memberService.SelectMember(userid); // 원래 회원정보 꺼내기
+            System.out.println("암호변경 회원정보2 : => " + member2.toString());
+
             BCryptPasswordEncoder bcpe = new BCryptPasswordEncoder();
             String newpw = bcpe.encode(member2.getMemberpw()); // 새 비밀번호
             String oldpw = member2.getMemberpw(); // 원래비밀번호
+            System.out.println("기존 비밀번호 : => "   + oldpw );
+            System.out.println("새 비밀번호   : => "   + newpw );
+ 
 
             if (bcpe.matches(member2.getMemberpw(), oldpw)) { // 원래비밀번호 확인후 새비밀번호
-                member2.setMemberpw(newpw); // 새비밀번호
-                memberRepository.save(member2);
-                map.put("success", 200);
+                Member member3 = new Member();
+                member3.setMemberpw(newpw); // 새비밀번호
+                memberRepository.save(member3);
             }
+            map.put("success", 200);
+        } catch (Exception e) {
+            map.put("fail", e.hashCode());
+        }
+        return map;
+    }
+
+    // 회원 비밀번호 비교
+    // 127.0.0.1:8080/HOST/member/memberpwContrast.json
+    @GetMapping(value = "/memberpwContrast.json", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Map<String, Object> MemberpwContrast(@RequestBody Member member, @RequestHeader("TOKEN") String token) {
+        Map<String, Object> map = new HashMap<>();
+        try {
+            String userid = jwtUtil.extractUsername(token);
+            Member member2 = memberService.SelectMember(userid); // 원래 회원정보 꺼내기
+            int ret = memberService.MatchPwCheck(member2);
+            map.put("status", 200);
+            map.put("ret", ret);
         } catch (Exception e) {
             map.put("fail", e.hashCode());
         }

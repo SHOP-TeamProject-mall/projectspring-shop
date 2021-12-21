@@ -31,16 +31,16 @@ public class Member {
     private String memberpw;
 
     @Column(name = "MEMBER_NAME")
-    private String membername;
+    private String membername = null;
 
     @Column(name = "MEMBER_EMAIL")
-    private String memberemail;
+    private String memberemail = null;
 
     @Column(name = "MEMBER_ADDRESS")
-    private String memberaddress;
+    private String memberaddress = null;
 
     @Column(name = "MEMBER_PHONE")
-    private String memberphone;
+    private String memberphone = null;
 
     @Column(name = "MEMBER_ROLE")
     private String memberrole = null;
