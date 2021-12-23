@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="MemberCart">
+
+    <select id="MemberCartSelect" parameterType="String" resultType="map">
+        SELECT MEMBERCART.PRODUCT_NO,PRODUCT_BRAND, PRODUCT_CATEGORY, PRODUCT_DATE, DELIVERYFEE, PRODUCT_FABRIC, PRODUCT_PRICE, PRODUCT_QUANTITY, PRODUCT_TITLE 
+        FROM MEMBERCART,PRODUCT 
+        WHERE MEMBERCART.PRODUCT_NO=PRODUCT.PRODUCT_NO AND MEMBERCART.CART_COUNT=1 AND MEMBER_ID=#{memberid};
+    </select>
+
+    <delete id="MemberCartDelete" parameterType="Long">
+        DELETE FROM MEMBERCART WHERE MEMBERCART_NO=#{membercartno};
+    </delete>
+
+
+</mapper>
+ 
+
+
+

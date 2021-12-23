@@ -18,5 +18,4 @@ public class ProjectspringShopApplication {
 		SpringApplication.run(ProjectspringShopApplication.class, args);
 		System.out.println("+++Starting Server+++");
 	}
-
 }

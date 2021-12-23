@@ -12,11 +12,6 @@
         SELECT MEMBER_ID FROM MEMBER WHERE MEMBER_NAME=#{membername} AND MEMBER_EMAIL=#{memberemail}
     </select>
 
-    <!-- 비밀번호 중복체크 -->
-    <select id="PWCheck" parameterType="String" resultType="int">
-        SELECT COUNT(*) FROM MEMBER WHERE MEMBER_PW=#{memberpw}
-    </select>
-
     <!-- 
     <delete id="deleteMember" parameterType="String">
         DELETE FROM MEMBER WHERE USERID=#{userid}
