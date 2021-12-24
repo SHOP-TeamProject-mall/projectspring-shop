@@ -2,6 +2,7 @@ package com.example.controller;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.example.entity.Product;
@@ -14,6 +15,7 @@ import com.example.service.ProductOptionService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -52,6 +54,23 @@ public class ProductOptionController {
             ProductOption productOption2 = productOptionService.inserProductOption(productOption);
             map.put("status", 200);
             map.put("option", productOption2);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            map.put("status", e.hashCode());
+        }
+        return map;
+    }
+    
+    // 127.0.0.1:8080/HOST/select_productoption.json?productno=
+    @GetMapping(value="/select_productoption.json", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Map<String, Object> SelectProductOption(
+        @RequestParam(name = "productno") long productno ) throws IOException {
+        Map<String, Object> map = new HashMap<>();
+        try{
+            List<ProductOption> list = productOptionService.selectProductOption_productno(productno);
+            map.put("list", list);
+            map.put("status", 200);
         }
         catch(Exception e){
             e.printStackTrace();

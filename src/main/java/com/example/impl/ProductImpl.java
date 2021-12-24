@@ -29,7 +29,7 @@ public class ProductImpl implements ProductService{
 
     @Override
     public List<Product> selectProductList() {
-        // TODO Auto-generated method stub
+        pRepository.findAll();
         return null;
     }
 

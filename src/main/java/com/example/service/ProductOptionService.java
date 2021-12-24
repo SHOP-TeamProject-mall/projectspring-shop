@@ -12,4 +12,6 @@ public interface ProductOptionService {
     public ProductOption inserProductOption(ProductOption productOption);
 
     public List<ProductOption> selectProductOptionList();
+
+    public List<ProductOption> selectProductOption_productno(Long productno);
 }

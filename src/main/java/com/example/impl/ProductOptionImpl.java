@@ -28,8 +28,16 @@ public class ProductOptionImpl implements ProductOptionService{
 
     @Override
     public List<ProductOption> selectProductOptionList() {
-        // TODO Auto-generated method stub
+
+        productOptionRepository.findAll();
         return null;
-    }
+
     
+    }
+
+    @Override
+    public List<ProductOption> selectProductOption_productno(Long productno) {
+        
+        return productOptionRepository.findAllByProduct_productno(productno);
+    }
 }

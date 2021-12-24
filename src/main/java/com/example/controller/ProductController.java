@@ -15,7 +15,9 @@ import com.example.repository.ProductSubImageRepository;
 import com.example.service.ProductService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -173,5 +175,31 @@ public class ProductController {
 
         return map;
     }
+
+    // 전체화면 조회 (제목별 / 브랜드별)
+    //127.0.0.1:8080/HOST/product/select_product.json?page=${this.page}&title=?&brand=
+    @GetMapping(value="/select_product.json", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Map<String, Object> Select_Product(
+        @RequestParam(name = "page", defaultValue = "0") int page,
+        @RequestParam(name = "title", defaultValue = "") String title,
+        @RequestParam(name = "brand", defaultValue = "") String brand) {
+            PageRequest pageable = PageRequest.of(page - 1, 3);
+
+            List<Product> list = pRepository.findByProducttitleIgnoreCaseContainingOrProductbrandIgnoreCaseContainingOrderByProductnoDesc(title, brand, pageable);
+
+            long pages = pRepository.countByProducttitleContaining(title);
+
+            Map<String, Object> map = new HashMap<>();
+            try{
+                map.put("ppage", (pages - 1) / 3 + 1);
+                map.put("list", list);
+            }
+            catch(Exception e){
+                e.printStackTrace();
+                map.put("status", e.hashCode());
+            }
+        return map;
+    }
+    
     
 }
