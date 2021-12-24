@@ -53,6 +53,12 @@ public class Product {
     @Column(name = "DELIVERYFEE")
     private Long productdeliveryfee;
 
+    @Column(name = "PRODUCT_SALE")
+    private Double productsale;
+
+    @Column(name = "PRODUCT_FINALPRICE")
+    private Long productfinalprice;
+
     @Column(name = "PRODUCT_DATE")
     @CreationTimestamp
     private Date productdate = null;

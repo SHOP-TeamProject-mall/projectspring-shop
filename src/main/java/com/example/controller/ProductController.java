@@ -45,7 +45,19 @@ public class ProductController {
     public Object insertProduct(@RequestBody Product product) {
         Map<String, Object> map = new HashMap<>();
         try{
-            long no = pService.inserProduct(product);
+            Product product2 = new Product();
+            Double psale = product.getProductsale() / 100;
+            product2.setProductbrand(product.getProductbrand());
+            product2.setProductprice(product.getProductprice());
+            product2.setProductcategory(product.getProductcategory());
+            product2.setProductdeliveryfee(product.getProductdeliveryfee());
+            product2.setProductfabric(product.getProductfabric());
+            product2.setProductfinalprice(product.getProductfinalprice());
+            product2.setProductquantity(product.getProductquantity());
+            product2.setProducttitle(product.getProducttitle());
+            product2.setProductsale(psale);
+
+            long no = pService.inserProduct(product2);
 
             map.put("status", 200);
             map.put("no", no);
@@ -85,7 +97,7 @@ public class ProductController {
                         productMainImage.setProductmainimagetype("");
                         productMainImageRepository.save(productMainImage);
                 }
-                map.put("status",200);
+                map.put("mainimage",200);
             }
             catch(Exception e){
                 e.printStackTrace();
@@ -94,7 +106,41 @@ public class ProductController {
         
         return map;
     }
-    
+    // 서브 이미지 첫번째 한개등록
+    //127.0.0.1:8080/HOST/product/insertproduct_firstsubimage.json
+    // @PostMapping(value="/insertproduct_firstsubimage.json", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    // public Map<String, Object> InsertProduct_FirstSubImage(
+    //     @RequestParam(name = "productno") long productno,
+    //     @RequestParam(name = "product_firstsubfile") MultipartFile files) throws IOException {
+    //         Map<String, Object> map = new HashMap<>();
+    //         try{
+    //             Product product = pRepository.getById(productno);
+    //             if(files != null){
+    //                 ProductSubImage productSubImage = new ProductSubImage();
+    //                     productSubImage.setProduct(product);
+    //                     productSubImage.setProductsubimage(files.getBytes());
+    //                     productSubImage.setProductsubimagename(files.getOriginalFilename());
+    //                     productSubImage.setProductsubimagesize(files.getSize());
+    //                     productSubImage.setProductsubimagetype(files.getContentType());
+    //                     productSubImageRepository.save(productSubImage);
+    //             }
+    //             else{
+    //                 ProductSubImage productSubImage = new ProductSubImage();
+    //                     productSubImage.setProduct(product);
+    //                     productSubImage.setProductsubimage(null);
+    //                     productSubImage.setProductsubimagename("");
+    //                     productSubImage.setProductsubimagesize(0L);
+    //                     productSubImage.setProductsubimagetype("");
+    //                     productSubImageRepository.save(productSubImage);
+    //             }
+    //             map.put("firstsubimage", 200);
+    //         }
+    //         catch(Exception e){
+
+    //         }
+    //         return map;
+    //     }
+
     // 서브 이미지 여러개 등록
     //127.0.0.1:8080/HOST/product/insertproduct_subimage.json
     @PostMapping(value="/insertproduct_subimage.json", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -118,7 +164,7 @@ public class ProductController {
                         list.add(productSubImage);
                 }
                 productSubImageRepository.saveAll(list);
-                map.put("status", 200);
+                map.put("subimage", 200);
             }
             catch(Exception e){
                 e.printStackTrace();
