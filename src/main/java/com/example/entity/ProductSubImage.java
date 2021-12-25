@@ -49,6 +49,9 @@ public class ProductSubImage {
     @Column(name = "PRODUCTSUBIMAGE_TYPE")
     private String productsubimagetype = null; // 파일 종류
 
+    @Column(name = "PRODUCTSUBIMAGE_IDX")
+    private int productsubimageidx;
+
     // 날짜타입 포멧설정
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
     @CreationTimestamp

@@ -16,7 +16,10 @@ import com.example.service.ProductService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -163,7 +166,9 @@ public class ProductController {
                         productSubImage.setProductsubimagename(files[i].getOriginalFilename());
                         productSubImage.setProductsubimagesize(files[i].getSize());
                         productSubImage.setProductsubimagetype(files[i].getContentType());
+                        productSubImage.setProductsubimageidx(i+1);
                         list.add(productSubImage);
+                        // System.out.println(i + "i입니다");
                 }
                 productSubImageRepository.saveAll(list);
                 map.put("subimage", 200);
@@ -200,6 +205,69 @@ public class ProductController {
             }
         return map;
     }
+
+    // 메인이미지 조회
+    // 127.0.0.1:8080/HOST/product/select_productmain_image.json
+    @GetMapping(value="/select_productmain_image.json", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<byte[]> SelectMainImage(@RequestParam(name = "productno") long productno) throws IOException {
+        try{
+            ProductMainImage productMainImage = productMainImageRepository.findByProduct_productno(productno);
+            if(productMainImage.getProductmainimage().length > 0){
+                HttpHeaders headers = new HttpHeaders();
+                if(productMainImage.getProductmainimagetype().equals("image/jpeg")){
+                    headers.setContentType(MediaType.IMAGE_JPEG);
+                }
+                else if(productMainImage.getProductmainimagetype().equals("image/png")){
+                    headers.setContentType(MediaType.IMAGE_PNG);
+                }
+                else if(productMainImage.getProductmainimagetype().equals("image/gif")){
+                    headers.setContentType(MediaType.IMAGE_GIF);
+                }
+
+                ResponseEntity<byte[]> response = new ResponseEntity<>(productMainImage.getProductmainimage(), headers, HttpStatus.OK);
+                return response;
+            }
+            return null;
+        }
+        catch(Exception e){
+            return null;
+        }
+    }
+
+    // 서브이미지 조회
+    // 127.0.0.1:8080/HOST/product/select_productsub_image.json
+    @GetMapping(value="/select_productsub_image.json", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<byte[]> SelectSubImage(
+        @RequestParam(name = "productno") long productno,
+        @RequestParam(name = "productidx") int productidx ) throws IOException {
+        try{
+            
+            ProductSubImage productSubImage = productSubImageRepository.findByProduct_productnoAndProductsubimageidx(productno, productidx);
+            // System.out.print(productSubImage.toString());
+            
+            for(int i=0; i<productSubImage.getProductsubimage().length; i++){
+                if(productSubImage.getProductsubimage().length > 0){
+                    HttpHeaders headers = new HttpHeaders();
+                    if(productSubImage.getProductsubimagetype().equals("image/jpeg")){
+                        headers.setContentType(MediaType.IMAGE_JPEG);
+                    }
+                    else if(productSubImage.getProductsubimagetype().equals("image/png")){
+                        headers.setContentType(MediaType.IMAGE_PNG);
+                    }
+                    else if(productSubImage.getProductsubimagetype().equals("image/gif")){
+                        headers.setContentType(MediaType.IMAGE_GIF);
+                    }
+                    ResponseEntity<byte[]> response = new ResponseEntity<>(productSubImage.getProductsubimage(), headers, HttpStatus.OK);
+                    return response;
+                }
+            }
+            return null;
+        }
+        catch(Exception e){
+            return null;
+        }
+    }
+    
     
     
 }
