@@ -14,13 +14,19 @@ import com.example.repository.ProductRepository;
 import com.example.service.ProductOptionService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
+import oracle.net.aso.e;
+
 import org.springframework.web.bind.annotation.RequestBody;
 
 
@@ -116,6 +122,34 @@ public class ProductOptionController {
         
         return map;
     }
+
+    // 127.0.0.1:8080/HOST/productoption/select_productoption_image.json?productoptionno=
+    @GetMapping(value="/select_productoption_image.json", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<byte[]> SelectProduct_OptionImage(@RequestParam(name = "productoptionno") long productoptionno) throws IOException{
+        try{
+            ProductOptionImage productOptionImage = productOptionImageRepository.findByProductOption_productoptionno(productoptionno);
+            if(productOptionImage.getProductoptionimage().length > 0){
+                HttpHeaders headers = new HttpHeaders();
+                if(productOptionImage.getProductoptionimagetype().equals("image/jpeg")){
+                    headers.setContentType(MediaType.IMAGE_JPEG);
+                }
+                else if(productOptionImage.getProductoptionimagetype().equals("image/png")){
+                    headers.setContentType(MediaType.IMAGE_PNG);
+                }
+                else if(productOptionImage.getProductoptionimagetype().equals("image/gif")){
+                    headers.setContentType(MediaType.IMAGE_GIF);
+                }
+
+                ResponseEntity<byte[]> response = new ResponseEntity<>(productOptionImage.getProductoptionimage(), headers, HttpStatus.OK);
+                return response;
+            }
+            return null;
+        }
+        catch(Exception e){
+            return null;
+        }
+    }
+    
     
     
 }

@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ProductOptionImageRepository extends JpaRepository<ProductOptionImage, Long>{
     
+    ProductOptionImage findByProductOption_productoptionno(long no);
 }

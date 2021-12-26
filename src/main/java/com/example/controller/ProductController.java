@@ -267,7 +267,84 @@ public class ProductController {
             return null;
         }
     }
-    
-    
-    
+
+    // 상품 카테고리별 조회
+    // 127.0.0.1:8080/HOST/product/select_product_category.json?productcategory=
+    @GetMapping(value = "/select_product_category.json", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Map<String, Object> Select_Product_Category(
+            @RequestParam(name = "productcategory", defaultValue = "") String productcategory,
+            @RequestParam(name = "menu") int menu) throws IOException {
+        Map<String, Object> map = new HashMap<>();
+        try{
+            if(menu == 1){
+                productcategory.equalsIgnoreCase("남성상의");
+                List<Product> masculine = pRepository.findByProductcategoryIgnoreCaseContaining(productcategory);
+                // System.out.println(masculine);
+                map.put("masculine", masculine);
+            }
+            if(menu == 2){
+                productcategory.equalsIgnoreCase("남성하의");
+                List<Product> mensbottoms = pRepository.findByProductcategoryIgnoreCaseContaining(productcategory);
+                // System.out.println(mensbottoms);
+                map.put("mensbottoms", mensbottoms);
+            }
+            if(menu == 3){
+                productcategory.equalsIgnoreCase("남성외투");
+                List<Product> mensovercoat = pRepository.findByProductcategoryIgnoreCaseContaining(productcategory);
+                // System.out.println(mensovercoat);
+                map.put("mensovercoat", mensovercoat);
+            }
+            if(menu == 4 ){
+                productcategory.equalsIgnoreCase("남성속옷");
+                List<Product> mensunderwear = pRepository.findByProductcategoryIgnoreCaseContaining(productcategory);
+                // System.out.println(mensunderwear);
+                map.put("mensunderwear", mensunderwear);
+            }
+            if(menu == 5 ){
+                productcategory.equalsIgnoreCase("여성상의");
+                List<Product> femaletop = pRepository.findByProductcategoryIgnoreCaseContaining(productcategory);
+                // System.out.println(femaletop);
+                map.put("femaletop", femaletop);
+            }
+            if(menu == 6 ){
+                productcategory.equalsIgnoreCase("여성하의");
+                List<Product> womensbottoms = pRepository.findByProductcategoryIgnoreCaseContaining(productcategory);
+                // System.out.println(womensbottoms);
+                map.put("womensbottoms", womensbottoms);
+            }
+            if(menu == 7 ){
+                productcategory.equalsIgnoreCase("여성외투");
+                List<Product> womensovercoat = pRepository.findByProductcategoryIgnoreCaseContaining(productcategory);
+                // System.out.println(womensovercoat);
+                map.put("womensovercoat", womensovercoat);
+            }
+            if(menu == 8 ){
+                productcategory.equalsIgnoreCase("여성속옷");
+                List<Product> womensunderwear = pRepository.findByProductcategoryIgnoreCaseContaining(productcategory);
+                // System.out.println(womensunderwear);
+                map.put("womensunderwear", womensunderwear);
+            }
+            if(productcategory.equalsIgnoreCase("상품1")){
+                List<Product> product1 = pRepository.findByProductcategoryIgnoreCaseContaining(productcategory);
+                // System.out.println(product1);
+                map.put("product1", product1);
+            }
+            if(productcategory.equalsIgnoreCase("상품2")){
+                List<Product> product2 = pRepository.findByProductcategoryIgnoreCaseContaining(productcategory);
+                // System.out.println(product2);
+                map.put("product2", product2);
+            }
+            if(productcategory.equalsIgnoreCase("상품3")){
+                List<Product> product3 = pRepository.findByProductcategoryIgnoreCaseContaining(productcategory);
+                // System.out.println(product3);
+                map.put("product3", product3);
+            }
+            map.put("status", 200);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            map.put("status", e.hashCode());
+        }
+        return map;
+    }
 }
