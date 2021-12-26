@@ -35,8 +35,7 @@ public class ProductImpl implements ProductService{
 
     @Override
     public Product selectOneProduct(long no) {
-        // TODO Auto-generated method stub
-        return null;
+        return pRepository.findByProductno(no);
     }
     
 }

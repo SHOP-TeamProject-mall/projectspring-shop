@@ -347,4 +347,21 @@ public class ProductController {
         }
         return map;
     }
+
+    // 127.0.0.1:8080/HOST/product/selectone_product.json?productno=
+    @GetMapping(value="/selectone_product.json" , consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Map<String, Object> SelectOneProduct(@RequestParam(name = "productno") long productno) {
+        Map<String, Object> map = new HashMap<>();
+        try{
+            Product product = pService.selectOneProduct(productno);
+            map.put("list", product);
+            map.put("status", 200);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            map.put("status", e.hashCode());
+        }
+        return map;
+    }
+    
 }
