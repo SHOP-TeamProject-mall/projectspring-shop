@@ -13,7 +13,7 @@ public interface MemberCartService {
     public List<Member> MemberCartSelect(String memberid);
 
     // 조회된 장바구니 목록 삭제
-    public List<Member> MemberCartDelete(String memberid);
+    public List<Member> MemberCartDelete(Long membercartno);
 
 
 }

@@ -25,9 +25,9 @@ public class MemberCartImpl implements MemberCartService {
     }
 
     @Override
-    public List<Member> MemberCartDelete(String memberid) {
+    public List<Member> MemberCartDelete(Long membercartno) {
         try {
-            return sqlSessionFactory.openSession().selectList("MemberCart.MemberCartDelete", memberid);
+            return sqlSessionFactory.openSession().selectList("MemberCart.MemberCartDelete", membercartno);
         } catch (Exception e) {
             e.printStackTrace();
             return null;

@@ -177,10 +177,11 @@ public class MemberController {
     // 회원 이미지 가져오기
     // 127.0.0.1:8080/HOST/member/MemberSelect_image?no=1
     @GetMapping(value = "/MemberSelect_image")
-    public ResponseEntity<byte[]> MemberSelectImage(@RequestParam("no") String no)
+    public ResponseEntity<byte[]> MemberSelectImage(@RequestParam("token") String token)
             throws IOException {
         try {
-            MemberJoinImage memberJoinImage = memberJoinImageRepository.findByMember_memberid(no);
+            String userid = jwtUtil.extractUsername(token);
+            MemberJoinImage memberJoinImage = memberJoinImageRepository.findByMember_memberid(userid);
             if (memberJoinImage.getImage().length > 0) {
                 HttpHeaders headers = new HttpHeaders();
                 if (memberJoinImage.getImagetype().equals("image/jpeg")) {

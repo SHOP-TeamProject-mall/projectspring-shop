@@ -11,8 +11,6 @@
     <delete id="MemberCartDelete" parameterType="Long">
         DELETE FROM MEMBERCART WHERE MEMBERCART_NO=#{membercartno};
     </delete>
-
-
 </mapper>
  
 
