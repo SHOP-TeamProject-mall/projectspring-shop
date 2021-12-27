@@ -363,5 +363,28 @@ public class ProductController {
         }
         return map;
     }
+
+    // 신상품 상품번호별 마지막 3개조회 // 질문
+    // 127.0.0.1:8080/HOST/product/selectthree_newproduct.json
+    @GetMapping(value="/selectthree_newproduct.json", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Map<String, Object> Select_NewProduct(@RequestParam(name = "title", defaultValue = "") String title) {
+        Map<String, Object> map = new HashMap<>();
+        try{
+            List<Product> product = pService.selectProductList();
+            
+            System.out.println(product.size());
+            for(int i=0; i<3; i++){
+                Product product1 = new Product();
+                product1.getProductno();
+            }
+            map.put("product", product);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            map.put("status", e.hashCode());
+        }
+        return map;
+    }
+    
     
 }
