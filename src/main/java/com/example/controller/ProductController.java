@@ -268,85 +268,86 @@ public class ProductController {
         }
     }
 
+    // 최신순
     // 상품 카테고리별 조회
     // 127.0.0.1:8080/HOST/product/select_product_category.json?productcategory=
-    @GetMapping(value = "/select_product_category.json", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Map<String, Object> Select_Product_Category(
-            @RequestParam(name = "productcategory", defaultValue = "") String productcategory,
-            @RequestParam(name = "menu") int menu) throws IOException {
-        Map<String, Object> map = new HashMap<>();
-        try{
-            if(menu == 1){
-                productcategory.equalsIgnoreCase("남성상의");
-                List<Product> masculine = pRepository.findByProductcategoryIgnoreCaseContaining(productcategory);
-                // System.out.println(masculine);
-                map.put("masculine", masculine);
-            }
-            if(menu == 2){
-                productcategory.equalsIgnoreCase("남성하의");
-                List<Product> mensbottoms = pRepository.findByProductcategoryIgnoreCaseContaining(productcategory);
-                // System.out.println(mensbottoms);
-                map.put("mensbottoms", mensbottoms);
-            }
-            if(menu == 3){
-                productcategory.equalsIgnoreCase("남성외투");
-                List<Product> mensovercoat = pRepository.findByProductcategoryIgnoreCaseContaining(productcategory);
-                // System.out.println(mensovercoat);
-                map.put("mensovercoat", mensovercoat);
-            }
-            if(menu == 4 ){
-                productcategory.equalsIgnoreCase("남성속옷");
-                List<Product> mensunderwear = pRepository.findByProductcategoryIgnoreCaseContaining(productcategory);
-                // System.out.println(mensunderwear);
-                map.put("mensunderwear", mensunderwear);
-            }
-            if(menu == 5 ){
-                productcategory.equalsIgnoreCase("여성상의");
-                List<Product> femaletop = pRepository.findByProductcategoryIgnoreCaseContaining(productcategory);
-                // System.out.println(femaletop);
-                map.put("femaletop", femaletop);
-            }
-            if(menu == 6 ){
-                productcategory.equalsIgnoreCase("여성하의");
-                List<Product> womensbottoms = pRepository.findByProductcategoryIgnoreCaseContaining(productcategory);
-                // System.out.println(womensbottoms);
-                map.put("womensbottoms", womensbottoms);
-            }
-            if(menu == 7 ){
-                productcategory.equalsIgnoreCase("여성외투");
-                List<Product> womensovercoat = pRepository.findByProductcategoryIgnoreCaseContaining(productcategory);
-                // System.out.println(womensovercoat);
-                map.put("womensovercoat", womensovercoat);
-            }
-            if(menu == 8 ){
-                productcategory.equalsIgnoreCase("여성속옷");
-                List<Product> womensunderwear = pRepository.findByProductcategoryIgnoreCaseContaining(productcategory);
-                // System.out.println(womensunderwear);
-                map.put("womensunderwear", womensunderwear);
-            }
-            if(productcategory.equalsIgnoreCase("상품1")){
-                List<Product> product1 = pRepository.findByProductcategoryIgnoreCaseContaining(productcategory);
-                // System.out.println(product1);
-                map.put("product1", product1);
-            }
-            if(productcategory.equalsIgnoreCase("상품2")){
-                List<Product> product2 = pRepository.findByProductcategoryIgnoreCaseContaining(productcategory);
-                // System.out.println(product2);
-                map.put("product2", product2);
-            }
-            if(productcategory.equalsIgnoreCase("상품3")){
-                List<Product> product3 = pRepository.findByProductcategoryIgnoreCaseContaining(productcategory);
-                // System.out.println(product3);
-                map.put("product3", product3);
-            }
-            map.put("status", 200);
-        }
-        catch(Exception e){
-            e.printStackTrace();
-            map.put("status", e.hashCode());
-        }
-        return map;
-    }
+    // @GetMapping(value = "/select_product_category.json", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    // public Map<String, Object> Select_Product_Category(
+    //         @RequestParam(name = "productcategory", defaultValue = "") String productcategory,
+    //         @RequestParam(name = "menu") int menu) throws IOException {
+    //     Map<String, Object> map = new HashMap<>();
+    //     try{
+    //         if(menu == 1){
+    //             productcategory.equalsIgnoreCase("남성상의");
+    //             List<Product> masculine = pRepository.findByProductcategoryIgnoreCaseContainingOrderByProductnoDesc(productcategory);
+    //             // System.out.println(masculine);
+    //             map.put("masculine", masculine);
+    //         }
+    //         if(menu == 2){
+    //             productcategory.equalsIgnoreCase("남성하의");
+    //             List<Product> mensbottoms = pRepository.findByProductcategoryIgnoreCaseContainingOrderByProductnoDesc(productcategory);
+    //             // System.out.println(mensbottoms);
+    //             map.put("mensbottoms", mensbottoms);
+    //         }
+    //         if(menu == 3){
+    //             productcategory.equalsIgnoreCase("남성외투");
+    //             List<Product> mensovercoat = pRepository.findByProductcategoryIgnoreCaseContainingOrderByProductnoDesc(productcategory);
+    //             // System.out.println(mensovercoat);
+    //             map.put("mensovercoat", mensovercoat);
+    //         }
+    //         if(menu == 4 ){
+    //             productcategory.equalsIgnoreCase("남성속옷");
+    //             List<Product> mensunderwear = pRepository.findByProductcategoryIgnoreCaseContainingOrderByProductnoDesc(productcategory);
+    //             // System.out.println(mensunderwear);
+    //             map.put("mensunderwear", mensunderwear);
+    //         }
+    //         if(menu == 5 ){
+    //             productcategory.equalsIgnoreCase("여성상의");
+    //             List<Product> femaletop = pRepository.findByProductcategoryIgnoreCaseContainingOrderByProductnoDesc(productcategory);
+    //             // System.out.println(femaletop);
+    //             map.put("femaletop", femaletop);
+    //         }
+    //         if(menu == 6 ){
+    //             productcategory.equalsIgnoreCase("여성하의");
+    //             List<Product> womensbottoms = pRepository.findByProductcategoryIgnoreCaseContainingOrderByProductnoDesc(productcategory);
+    //             // System.out.println(womensbottoms);
+    //             map.put("womensbottoms", womensbottoms);
+    //         }
+    //         if(menu == 7 ){
+    //             productcategory.equalsIgnoreCase("여성외투");
+    //             List<Product> womensovercoat = pRepository.findByProductcategoryIgnoreCaseContainingOrderByProductnoDesc(productcategory);
+    //             // System.out.println(womensovercoat);
+    //             map.put("womensovercoat", womensovercoat);
+    //         }
+    //         if(menu == 8 ){
+    //             productcategory.equalsIgnoreCase("여성속옷");
+    //             List<Product> womensunderwear = pRepository.findByProductcategoryIgnoreCaseContainingOrderByProductnoDesc(productcategory);
+    //             // System.out.println(womensunderwear);
+    //             map.put("womensunderwear", womensunderwear);
+    //         }
+    //         if(productcategory.equalsIgnoreCase("상품1")){
+    //             List<Product> product1 = pRepository.findByProductcategoryIgnoreCaseContainingOrderByProductnoDesc(productcategory);
+    //             // System.out.println(product1);
+    //             map.put("product1", product1);
+    //         }
+    //         if(productcategory.equalsIgnoreCase("상품2")){
+    //             List<Product> product2 = pRepository.findByProductcategoryIgnoreCaseContainingOrderByProductnoDesc(productcategory);
+    //             // System.out.println(product2);
+    //             map.put("product2", product2);
+    //         }
+    //         if(productcategory.equalsIgnoreCase("상품3")){
+    //             List<Product> product3 = pRepository.findByProductcategoryIgnoreCaseContainingOrderByProductnoDesc(productcategory);
+    //             // System.out.println(product3);
+    //             map.put("product3", product3);
+    //         }
+    //         map.put("status", 200);
+    //     }
+    //     catch(Exception e){
+    //         e.printStackTrace();
+    //         map.put("status", e.hashCode());
+    //     }
+    //     return map;
+    // }
 
     // 127.0.0.1:8080/HOST/product/selectone_product.json?productno=
     @GetMapping(value="/selectone_product.json" , consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -386,5 +387,112 @@ public class ProductController {
         return map;
     }
     
-    
+    // 인기순
+
+    // 주문순
+
+    // 최신순 카테고리 => 제목검색
+    // 127.0.0.1:8080/HOST/product/select_product_category_title.json?menu=&page=1&productcategory=&producttitle=
+    @GetMapping(value = "/select_product_category_title.json", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Map<String, Object> Select_Product_Category_ProductTitle(
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "productcategory", defaultValue = "") String productcategory,
+            @RequestParam(name = "producttitle", defaultValue = "") String producttitle,
+            @RequestParam(name = "menu") int menu) throws IOException {
+        Map<String, Object> map = new HashMap<>();
+        PageRequest pageable = PageRequest.of(page - 1, 10);
+        try{
+            if(menu == 1){
+                productcategory.equalsIgnoreCase("남성상의");
+                List<Product> masculine = pRepository.findByProductcategoryIgnoreCaseContainingAndProducttitleIgnoreCaseContainingOrderByProductnoDesc(productcategory, producttitle, pageable);
+                // System.out.println(masculine);
+                long pages = pRepository.countByProducttitleContaining(producttitle);
+                map.put("masculine", masculine);
+                map.put("ppage", (pages - 1) / 10 + 1);
+            }
+            if(menu == 2){
+                productcategory.equalsIgnoreCase("남성하의");
+                List<Product> mensbottoms = pRepository.findByProductcategoryIgnoreCaseContainingAndProducttitleIgnoreCaseContainingOrderByProductnoDesc(productcategory, producttitle, pageable);
+                // System.out.println(mensbottoms);
+                long pages = pRepository.countByProducttitleContaining(producttitle);
+                map.put("mensbottoms", mensbottoms);
+                map.put("ppage", (pages - 1) / 10 + 1);
+            }
+            if(menu == 3){
+                productcategory.equalsIgnoreCase("남성외투");
+                List<Product> mensovercoat = pRepository.findByProductcategoryIgnoreCaseContainingAndProducttitleIgnoreCaseContainingOrderByProductnoDesc(productcategory, producttitle, pageable);
+                // System.out.println(mensovercoat);
+                long pages = pRepository.countByProducttitleContaining(producttitle);
+                map.put("mensovercoat", mensovercoat);
+                map.put("ppage", (pages - 1) / 10 + 1);
+            }
+            if(menu == 4 ){
+                productcategory.equalsIgnoreCase("남성속옷");
+                List<Product> mensunderwear = pRepository.findByProductcategoryIgnoreCaseContainingAndProducttitleIgnoreCaseContainingOrderByProductnoDesc(productcategory, producttitle, pageable);
+                // System.out.println(mensunderwear);
+                long pages = pRepository.countByProducttitleContaining(producttitle);
+                map.put("mensunderwear", mensunderwear);
+                map.put("ppage", (pages - 1) / 10 + 1);
+            }
+            if(menu == 5 ){
+                productcategory.equalsIgnoreCase("여성상의");
+                List<Product> femaletop = pRepository.findByProductcategoryIgnoreCaseContainingAndProducttitleIgnoreCaseContainingOrderByProductnoDesc(productcategory, producttitle, pageable);
+                // System.out.println(femaletop);
+                long pages = pRepository.countByProducttitleContaining(producttitle);
+                map.put("femaletop", femaletop);
+                map.put("ppage", (pages - 1) / 10 + 1);
+            }
+            if(menu == 6 ){
+                productcategory.equalsIgnoreCase("여성하의");
+                List<Product> womensbottoms = pRepository.findByProductcategoryIgnoreCaseContainingAndProducttitleIgnoreCaseContainingOrderByProductnoDesc(productcategory, producttitle, pageable);
+                // System.out.println(womensbottoms);
+                long pages = pRepository.countByProducttitleContaining(producttitle);
+                map.put("womensbottoms", womensbottoms);
+                map.put("ppage", (pages - 1) / 10 + 1);
+            }
+            if(menu == 7 ){
+                productcategory.equalsIgnoreCase("여성외투");
+                List<Product> womensovercoat = pRepository.findByProductcategoryIgnoreCaseContainingAndProducttitleIgnoreCaseContainingOrderByProductnoDesc(productcategory, producttitle, pageable);
+                // System.out.println(womensovercoat);
+                long pages = pRepository.countByProducttitleContaining(producttitle);
+                map.put("womensovercoat", womensovercoat);
+                map.put("ppage", (pages - 1) / 10 + 1);
+            }
+            if(menu == 8 ){
+                productcategory.equalsIgnoreCase("여성속옷");
+                List<Product> womensunderwear = pRepository.findByProductcategoryIgnoreCaseContainingAndProducttitleIgnoreCaseContainingOrderByProductnoDesc(productcategory, producttitle, pageable);
+                // System.out.println(womensunderwear);
+                long pages = pRepository.countByProducttitleContaining(producttitle);
+                map.put("womensunderwear", womensunderwear);
+                map.put("ppage", (pages - 1) / 10 + 1);
+            }
+            if(productcategory.equalsIgnoreCase("상품1")){
+                List<Product> product1 = pRepository.findByProductcategoryIgnoreCaseContainingAndProducttitleIgnoreCaseContainingOrderByProductnoDesc(productcategory, producttitle, pageable);
+                // System.out.println(product1);
+                long pages = pRepository.countByProducttitleContaining(producttitle);
+                map.put("product1", product1);
+                map.put("ppage", (pages - 1) / 10 + 1);
+            }
+            if(productcategory.equalsIgnoreCase("상품2")){
+                List<Product> product2 = pRepository.findByProductcategoryIgnoreCaseContainingAndProducttitleIgnoreCaseContainingOrderByProductnoDesc(productcategory, producttitle, pageable);
+                // System.out.println(product2);
+                long pages = pRepository.countByProducttitleContaining(producttitle);
+                map.put("product2", product2);
+                map.put("ppage", (pages - 1) / 10 + 1);
+            }
+            if(productcategory.equalsIgnoreCase("상품3")){
+                List<Product> product3 = pRepository.findByProductcategoryIgnoreCaseContainingAndProducttitleIgnoreCaseContainingOrderByProductnoDesc(productcategory, producttitle, pageable);
+                // System.out.println(product3);
+                long pages = pRepository.countByProducttitleContaining(producttitle);
+                map.put("product3", product3);
+                map.put("ppage", (pages - 1) / 10 + 1);
+            }
+            map.put("status", 200);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            map.put("status", e.hashCode());
+        }
+        return map;
+    }
 }

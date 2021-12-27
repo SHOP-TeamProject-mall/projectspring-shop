@@ -16,7 +16,11 @@ public interface ProductRepository extends JpaRepository<Product, Long>{
 
     long countByProducttitleContaining(String Producttitle);
 
-    List<Product> findByProductcategoryIgnoreCaseContaining(String findByProductcategory);
+    // 카테고리별 최신순
+    List<Product> findByProductcategoryIgnoreCaseContainingOrderByProductnoDesc(String Productcategory);
+
+    // 카테고리별 검색
+    List<Product> findByProductcategoryIgnoreCaseContainingAndProducttitleIgnoreCaseContainingOrderByProductnoDesc(String Productcategory, String producttitle, Pageable pageable);
 
     List<Product> findByProducttitleIgnoreCaseContainingOrderByProductnoDesc(String producttitle);
 }
