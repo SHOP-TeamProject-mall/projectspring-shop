@@ -168,8 +168,10 @@ public class ProductController {
                         productSubImage.setProductsubimagetype(files[i].getContentType());
                         productSubImage.setProductsubimageidx(i+1);
                         list.add(productSubImage);
+                        product.setProductsubimageidx(1+i);
                         // System.out.println(i + "i입니다");
                 }
+                pRepository.save(product);
                 productSubImageRepository.saveAll(list);
                 map.put("subimage", 200);
             }

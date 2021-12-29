@@ -59,6 +59,9 @@ public class Product {
     @Column(name = "PRODUCT_FINALPRICE")
     private Long productfinalprice;
 
+    @Column(name = "PRODUCT_SUBIMAGE_IDX")
+    private int productsubimageidx;
+
     @Column(name = "PRODUCT_DATE")
     @CreationTimestamp
     private Date productdate = null;
