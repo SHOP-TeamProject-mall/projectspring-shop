@@ -61,6 +61,19 @@ public class ProductController {
             product2.setProductquantity(product.getProductquantity());
             product2.setProducttitle(product.getProducttitle());
             product2.setProductsale(psale);
+            if(product2.getProductdeliveryfee() == 0){
+                product2.setProductdeliveryfeecheck("무료");
+            }
+            else{
+                product2.setProductdeliveryfeecheck("유료");
+            }
+
+            if(product2.getProductsale() == 0){
+                product2.setProductsalecheck(null);
+            }
+            else{
+                product2.setProductsalecheck("할인");
+            }
 
             long no = pService.inserProduct(product2);
 

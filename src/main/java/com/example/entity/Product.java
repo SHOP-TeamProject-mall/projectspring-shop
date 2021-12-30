@@ -46,15 +46,21 @@ public class Product {
 
     @Column(name = "PRODUCT_FABRIC")
     private String productfabric;
-
+    
     @Column(name = "PRODUCT_QUANTITY")
     private Long productquantity;
 
+    @Column(name = "DELIVERYFEE_CHECK")
+    private String productdeliveryfeecheck;
+    
     @Column(name = "DELIVERYFEE")
     private Long productdeliveryfee;
 
     @Column(name = "PRODUCT_SALE")
     private Double productsale;
+
+    @Column(name = "PRODUCT_SALE_CHECK")
+    private String productsalecheck;
 
     @Column(name = "PRODUCT_FINALPRICE")
     private Long productfinalprice;
