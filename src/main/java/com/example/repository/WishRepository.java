@@ -12,7 +12,7 @@ public interface WishRepository extends JpaRepository<MemberWish, Long> {
     
     MemberWish findByMember_memberid_AndProduct_productno(String memberid, Long productno);
 
-    @Query(value = "SELECT SUM(WISH_COUNT) FROM WISH WHERE MEMBER_ID=:id", nativeQuery = true)
+    @Query(value = "SELECT SUM(WISH_COUNT) FROM MEMBERWISH WHERE MEMBER_ID=:id", nativeQuery = true)
     long queryCountByWishList(@Param("id") String id);
 
 }

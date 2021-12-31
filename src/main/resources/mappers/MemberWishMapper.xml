@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="MemberWish">
+
+    <select id="MemberWishSelect" parameterType="String" resultType="map">
+        SELECT 
+            MEMBERWISH.PRODUCT_NO,PRODUCT_BRAND, 
+            PRODUCT_CATEGORY, PRODUCT_DATE, DELIVERYFEE,
+            PRODUCT_FABRIC, PRODUCT_PRICE, PRODUCT_QUANTITY, PRODUCT_TITLE,MEMBERWISH_NO
+        FROM 
+            MEMBERWISH,PRODUCT 
+        WHERE 
+            MEMBERWISH.PRODUCT_NO=PRODUCT.PRODUCT_NO
+                AND 
+            MEMBERWISH.WISH_COUNT=1 AND MEMBER_ID=#{memberid};
+    </select>
+
+    <delete id="MemberWishDelete" parameterType="Long">
+        DELETE FROM MEMBERWISH WHERE MEMBERWISH_NO=#{memberwish}
+    </delete>
+</mapper>
+ 
+
+
+
