@@ -364,6 +364,7 @@ public class ProductController {
     //     return map;
     // }
 
+    // 상품 1개 조회
     // 127.0.0.1:8080/HOST/product/selectone_product.json?productno=
     @GetMapping(value="/selectone_product.json" , consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Map<String, Object> SelectOneProduct(@RequestParam(name = "productno") long productno) {
@@ -510,4 +511,68 @@ public class ProductController {
         }
         return map;
     }
+
+    // 상품정보 수정
+    // 127.0.0.1:8080/HOST/product/product_update.json?productno=
+    @PostMapping(value="/product_update.json", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Map<String, Object> ProductUpdate(
+        @RequestBody Product product,
+        @RequestParam(name = "productno" ) Long productno) throws IOException{
+        Map<String,Object> map = new HashMap<>();
+        try{
+            Product product2 = pRepository.findByProductno(productno);
+            Double psale = product.getProductsale() / 100;
+            product2.setProducttitle(product.getProducttitle());
+            product2.setProductcategory(product.getProductcategory());
+            product2.setProductquantity(product.getProductquantity());
+            product2.setProductbrand(product.getProductbrand());
+            product2.setProductfabric(product.getProductfabric());
+            product2.setProductprice(product.getProductdeliveryfee());
+            product2.setProductsale(psale);
+            if(product2.getProductdeliveryfee() == 0){
+                product2.setProductdeliveryfeecheck("무료");
+            }
+            else{
+                product2.setProductdeliveryfeecheck("유료");
+            }
+            
+            if(product2.getProductsale() == 0){
+                product2.setProductsalecheck(null);
+            }
+            else{
+                product2.setProductsalecheck("할인");
+            }
+            pService.UpdateProduct(product2);
+            map.put("status", 200);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            map.put("status", e.hashCode());
+        }
+        return map;
+    }
+
+    // 127.0.0.1:8080/HOST/product/update_product_mainimage.json?productno
+    @PostMapping(value = "/update_product_mainimage.json", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Map<String, Object> UpdateProductMainImage(@RequestParam(name = "productno") long productno,
+        @RequestParam(name = "updatemainimage") MultipartFile files) throws IOException {
+            Map<String, Object> map = new HashMap<>();
+        try{
+            if (files != null){
+                ProductMainImage productMainImage = productMainImageRepository.findByProduct_productno(productno);
+                productMainImage.setProductmainimage(files.getBytes());
+                productMainImage.setProductmainimagename(files.getOriginalFilename());
+                productMainImage.setProductmainimagesize(files.getSize());
+                productMainImage.setProductmainimagetype(files.getContentType());
+                productMainImageRepository.save(productMainImage);
+            }
+            map.put("status", 200);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            map.put("status", e.hashCode());
+        }
+        return map;
+    }
+    
 }

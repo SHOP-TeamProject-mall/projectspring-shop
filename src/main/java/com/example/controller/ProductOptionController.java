@@ -149,8 +149,55 @@ public class ProductOptionController {
             return null;
         }
     }
-    
-    
-    
+
+    // 옵션정보 변경
+    // 127.0.0.1:8080/HOST/productoption/update_productoption.json?productoptionno=
+    @PostMapping(value="/update_productoption.json", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Map<String,Object> UpdateProductoption(
+        @RequestBody ProductOption productOption,
+        @RequestParam(name = "productoptionno") long productoptionno) throws IOException{
+        Map<String, Object> map = new HashMap<>();
+        try{
+            ProductOption productOption2 = productOptionRepository.findByProductoptionno(productoptionno);
+            productOption2.setProductoptionname(productOption.getProductoptionname());
+            productOption2.setProductoptioncolor(productOption.getProductoptioncolor());
+            productOption2.setProductoptionsize(productOption.getProductoptionsize());
+            productOption2.setProductoptionadditionalamount(productOption.getProductoptionadditionalamount());
+
+            productOptionService.UpdateProductOption(productOption2);
+            map.put("status", 200);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            map.put("status", e.hashCode());
+        }
+        return map;
+    }
+
+    // 옵션이미지 변경
+    // 127.0.0.1:8080/HOST/productoption/update_productoptionImage.json?productoptionno=
+    @PostMapping(value="/update_productoptionImage.json", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Map<String,Object> UpdateProductoptionImage(
+        @RequestParam(name = "productoptionno") long productoptionno,
+        @RequestParam(name = "updateproductoptionimage") MultipartFile files) throws IOException{
+        Map<String, Object> map = new HashMap<>();
+        try{
+            if(files != null){
+                ProductOptionImage productOptionImage = productOptionImageRepository.findByProductOption_productoptionno(productoptionno);
+                productOptionImage.setProductoptionimage(files.getBytes());
+                productOptionImage.setProductoptionimagename(files.getOriginalFilename());
+                productOptionImage.setProductoptionimagesize(files.getSize());
+                productOptionImage.setProductoptionimagetype(files.getContentType());
+                productOptionImageRepository.save(productOptionImage);
+            }
+            map.put("status", 200);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            map.put("status", e.hashCode());
+        }
+        return map;
+    }
     
 }
+

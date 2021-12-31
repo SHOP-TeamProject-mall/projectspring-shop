@@ -14,4 +14,6 @@ public interface ProductService {
     public List<Product> selectProductList();
 
     public Product selectOneProduct(long no);
+
+    public int UpdateProduct(Product product);
 }

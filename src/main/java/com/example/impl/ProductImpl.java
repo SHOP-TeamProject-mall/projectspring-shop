@@ -37,5 +37,11 @@ public class ProductImpl implements ProductService{
     public Product selectOneProduct(long no) {
         return pRepository.findByProductno(no);
     }
+
+    @Override
+    public int UpdateProduct(Product product) {
+        pRepository.save(product);
+        return 0;
+    }
     
 }

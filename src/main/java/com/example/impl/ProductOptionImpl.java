@@ -40,4 +40,10 @@ public class ProductOptionImpl implements ProductOptionService{
         
         return productOptionRepository.findAllByProduct_productno(productno);
     }
+
+    @Override
+    public int UpdateProductOption(ProductOption productOption) {
+        productOptionRepository.save(productOption);
+        return 0;
+    }
 }
