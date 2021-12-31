@@ -22,6 +22,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -51,7 +52,7 @@ public class ProductController {
         Map<String, Object> map = new HashMap<>();
         try{
             Product product2 = new Product();
-            Double psale = product.getProductsale() / 100;
+            Double psale = product.getProductsale();
             product2.setProductbrand(product.getProductbrand());
             product2.setProductprice(product.getProductprice());
             product2.setProductcategory(product.getProductcategory());
@@ -513,21 +514,24 @@ public class ProductController {
     }
 
     // 상품정보 수정
-    // 127.0.0.1:8080/HOST/product/product_update.json?productno=
-    @PostMapping(value="/product_update.json", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    // 127.0.0.1:8080/HOST/product/product_update.json?page=&productno=
+    @PutMapping(value="/product_update.json", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Map<String, Object> ProductUpdate(
+        @RequestParam(name = "page", defaultValue = "0") int page,
         @RequestBody Product product,
         @RequestParam(name = "productno" ) Long productno) throws IOException{
         Map<String,Object> map = new HashMap<>();
         try{
             Product product2 = pRepository.findByProductno(productno);
-            Double psale = product.getProductsale() / 100;
+            Double psale = product.getProductsale();
             product2.setProducttitle(product.getProducttitle());
             product2.setProductcategory(product.getProductcategory());
             product2.setProductquantity(product.getProductquantity());
             product2.setProductbrand(product.getProductbrand());
             product2.setProductfabric(product.getProductfabric());
-            product2.setProductprice(product.getProductdeliveryfee());
+            product2.setProductprice(product.getProductprice());
+            product2.setProductfinalprice(product.getProductfinalprice());
+            product2.setProductdeliveryfee(product.getProductdeliveryfee());
             product2.setProductsale(psale);
             if(product2.getProductdeliveryfee() == 0){
                 product2.setProductdeliveryfeecheck("무료");
