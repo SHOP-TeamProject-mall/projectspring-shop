@@ -27,7 +27,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
+import oracle.jdbc.proxy.annotation.Post;
+
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PathVariable;
+
 
 
 @RestController
@@ -556,9 +561,12 @@ public class ProductController {
         return map;
     }
 
+    // 메인이미지 수정
     // 127.0.0.1:8080/HOST/product/update_product_mainimage.json?productno
     @PostMapping(value = "/update_product_mainimage.json", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Map<String, Object> UpdateProductMainImage(@RequestParam(name = "productno") long productno,
+    public Map<String, Object> UpdateProductMainImage(
+        @RequestParam(name = "page", defaultValue = "0") int page,
+        @RequestParam(name = "productno") long productno,
         @RequestParam(name = "updatemainimage") MultipartFile files) throws IOException {
             Map<String, Object> map = new HashMap<>();
         try{
@@ -578,5 +586,80 @@ public class ProductController {
         }
         return map;
     }
+
+    // 서브이미지 수정 (idx)
+    // 127.0.0.1:8080/HOST/product/update_product_subimage.json?productno=&productidx=
+    @PostMapping(value="/update_product_subimage.json", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Map<String, Object> UpdateProductSubImage(
+        @RequestParam(name = "productno") long productno,
+        @RequestParam(name = "productidx") int productidx,
+        @RequestParam(name = "updatesubimage") MultipartFile files) throws IOException {
+            Map<String, Object> map = new HashMap<>();
+        try{
+            if(files != null){
+                ProductSubImage productSubImage = productSubImageRepository.findByProduct_productnoAndProductsubimageidx(productno, productidx);
+                productSubImage.setProductsubimage(files.getBytes());
+                productSubImage.setProductsubimagename(files.getOriginalFilename());
+                productSubImage.setProductsubimagesize(files.getSize());
+                productSubImage.setProductsubimagetype(files.getContentType());
+                productSubImageRepository.save(productSubImage);
+            }
+            map.put("status", 200);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            map.put("status", e.hashCode());
+        }
+        return map;
+    }
+
+    // 서브이미지 추가
+    // 127.0.0.1:8080/HOST/product/add_product_subimage.json?productno=
+    @PostMapping(value="/add_product_subimage.json", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Map<String, Object> AddProductSubImage(
+        @RequestParam(name = "productno") long productno,
+        @RequestParam(name = "productidx") int productidx,
+        @RequestParam(name = "addsubimage") MultipartFile files) throws IOException {
+            Map<String, Object> map = new HashMap<>();
+            try{
+                Product product = pRepository.getById(productno);
+                if(files != null){
+                    ProductSubImage productSubImage = new ProductSubImage();
+                        productSubImage.setProduct(product);
+                        productSubImage.setProductsubimage(files.getBytes());
+                        productSubImage.setProductsubimagename(files.getOriginalFilename());
+                        productSubImage.setProductsubimagesize(files.getSize());
+                        productSubImage.setProductsubimagetype(files.getContentType());
+                        productSubImage.setProductsubimageidx(productidx);
+                        productSubImageRepository.save(productSubImage);
+                }
+            map.put("status", 200);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            map.put("status", e.hashCode());
+        }
+        return map;
+    }
+
+    // 서브이미지 추가 시 상품 엔티티의 productsubimageidx 1씩 증가
+    // 127.0.0.1:8080/HOST/product/update_product_subimage_idx.json
+    @PutMapping(value="/update_product_subimage_idx.json", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Map<String, Object> UpdateProductSubimageIdx(
+        @RequestParam(name = "productno") long productno) {
+        Map<String, Object> map = new HashMap<>();
+        try{
+            Product product1 = pRepository.findByProductno(productno);
+            product1.setProductsubimageidx(product1.getProductsubimageidx()+1);
+            pRepository.save(product1);
+            map.put("satus", product1);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            map.put("status", e.hashCode());
+        }
+        return map;
+    }
+    
     
 }

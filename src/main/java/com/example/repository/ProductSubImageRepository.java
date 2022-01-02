@@ -1,6 +1,8 @@
 package com.example.repository;
 
 
+import java.util.List;
+
 import com.example.entity.ProductSubImage;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,5 +17,5 @@ public interface ProductSubImageRepository extends JpaRepository<ProductSubImage
 
     ProductSubImage findByProduct_productnoAndProductsubimageidx(long no, int idx);
     
-
+    List<ProductSubImage> countByProductsubimageidx(int idx);
 }
