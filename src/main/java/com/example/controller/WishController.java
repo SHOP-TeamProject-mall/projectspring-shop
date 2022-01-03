@@ -56,11 +56,12 @@ public class WishController {
     // 좋아요(찜) 추가하기
     // 127.0.0.1:8080/HOST/wish/insertwish.json?no=
     @PostMapping(value = "/insertwish.json", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Map<String, Object> insertProductPost(@RequestParam("no") long no, @RequestHeader("token") String token) {
+    public Map<String, Object> insertProductPost(@RequestParam("productno") long no, @RequestHeader("token") String token) {
         Map<String, Object> map = new HashMap<>();
+        
 
-        System.out.println("wish token : =>" + token);
-        System.out.println("wish no    : =>" + no);
+        System.out.println("productno : =>" + token);
+        System.out.println("productno    : =>" + no);
 
         try {
             String memberid = jwtUtil.extractUsername(token); // 토큰 회원 아이디 추출
@@ -101,7 +102,7 @@ public class WishController {
         Map<String, Object> map = new HashMap<>();
         try {
             String memberid = jwtUtil.extractUsername(token);
-            map.put("wishlist", memberWishService.MemberWishSelect(memberid));
+            map.put("wishcount", memberWishService.MemberWishSelect(memberid));
             map.put("status", 200);
         } catch (Exception e) {
             e.printStackTrace();
@@ -113,11 +114,13 @@ public class WishController {
     // 찜 회원별 개수 조회
     // 127.0.0.1:8080/HOST/wish/wish_hit_select.json
     @GetMapping(value = "/wish_hit_select.json", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Map<String, Object> updatewishhit(@RequestHeader("token") String token) {
+    public Map<String, Object> updatewishhit(@RequestParam("no") long productno) {
         Map<String, Object> map = new HashMap<>();
         try {
-            String userid = jwtUtil.extractUsername(token);
-            map.put("wishcount", wishRepository.queryCountByWishList(userid));
+            // String userid = jwtUtil.extractUsername(token);
+            // map.put("memberwish", wishRepository.queryCountByWishList(userid,
+            // productno));
+            map.put("memberwish", wishRepository.queryCountByWishList(productno));
             map.put("status", 200);
         } catch (Exception e) {
             e.printStackTrace();

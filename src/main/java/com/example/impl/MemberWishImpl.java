@@ -3,6 +3,7 @@ package com.example.impl;
 import java.util.List;
 
 import com.example.entity.Member;
+import com.example.entity.MemberWish;
 import com.example.service.MemberWishService;
 
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -36,4 +37,13 @@ public class MemberWishImpl implements MemberWishService {
         }
     }
 
+    @Override
+    public List<MemberWish> MemberWish(Long memberWish) {
+        try {
+            return sqlSessionFactory.openSession().selectList("MemberWishList" , memberWish);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

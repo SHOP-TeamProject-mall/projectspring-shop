@@ -15,6 +15,10 @@
             MEMBERWISH.WISH_COUNT=1 AND MEMBER_ID=#{memberid};
     </select>
 
+    <select id="MemberWishList" parameterType="Long" resultType="map">
+        SELECT * FROM MEMBERWISH
+    </select>
+
     <delete id="MemberWishDelete" parameterType="Long">
         DELETE FROM MEMBERWISH WHERE MEMBERWISH_NO=#{memberwish}
     </delete>

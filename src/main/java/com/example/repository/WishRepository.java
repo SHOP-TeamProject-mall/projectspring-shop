@@ -9,10 +9,14 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface WishRepository extends JpaRepository<MemberWish, Long> {
-    
+
     MemberWish findByMember_memberid_AndProduct_productno(String memberid, Long productno);
 
-    @Query(value = "SELECT SUM(WISH_COUNT) FROM MEMBERWISH WHERE MEMBER_ID=:id", nativeQuery = true)
-    long queryCountByWishList(@Param("id") String id);
+    // @Query(value = "SELECT WISH_COUNT FROM MEMBERWISH WHERE MEMBER_ID=:id AND PRODUCT_NO=:product_no", nativeQuery = true)
+    // long queryCountByWishList(@Param("id") String id, @Param("product_no") long productno);
+
+    @Query(value = "SELECT WISH_COUNT FROM MEMBERWISH WHERE PRODUCT_NO=:id", nativeQuery = true)
+    long queryCountByWishList(@Param("id") Long id);
+
 
 }
