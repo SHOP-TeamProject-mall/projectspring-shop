@@ -102,7 +102,7 @@ public class WishController {
         Map<String, Object> map = new HashMap<>();
         try {
             String memberid = jwtUtil.extractUsername(token);
-            map.put("wishcount", memberWishService.MemberWishSelect(memberid));
+            map.put("wishlist", memberWishService.MemberWishSelect(memberid));
             map.put("status", 200);
         } catch (Exception e) {
             e.printStackTrace();
@@ -120,7 +120,7 @@ public class WishController {
             // String userid = jwtUtil.extractUsername(token);
             // map.put("memberwish", wishRepository.queryCountByWishList(userid,
             // productno));
-            map.put("memberwish", wishRepository.queryCountByWishList(productno));
+            // map.put("memberwish", wishRepository.queryCountByWishList(productno));
             map.put("status", 200);
         } catch (Exception e) {
             e.printStackTrace();
