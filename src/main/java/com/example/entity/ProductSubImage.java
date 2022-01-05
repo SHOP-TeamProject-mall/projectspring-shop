@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -52,13 +53,16 @@ public class ProductSubImage {
     @Column(name = "PRODUCTSUBIMAGE_IDX")
     private int productsubimageidx;
 
+    @Column
+    private String url;
+
     // 날짜타입 포멧설정
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
     @CreationTimestamp
     @Column(name = "REGDATE")
     private Date regdate;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "PRODUCT_NO")
     private Product product;
 }

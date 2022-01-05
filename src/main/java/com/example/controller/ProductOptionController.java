@@ -18,6 +18,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -199,6 +200,24 @@ public class ProductOptionController {
         }
         return map;
     }
-    
+
+    // 옵션삭제
+    // 127.0.0.1:8080/HOST/productoption/delete_productoption.json?productno=
+    @DeleteMapping(value="/delete_productoption.json", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Map<String,Object> DeleteProductOption(
+        @RequestParam(name = "productoptionno") long productoptionno) throws IOException{
+            Map<String, Object> map = new HashMap<>();
+        try{
+            ProductOption productOption = productOptionRepository.findByProductoptionno(productoptionno);
+            long no = productOption.getProductoptionno();
+            productOptionRepository.deleteById(no);
+            map.put("status", 200);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            map.put("status", e.hashCode());
+        }
+        return map;
+    }
 }
 

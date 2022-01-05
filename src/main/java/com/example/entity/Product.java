@@ -1,16 +1,25 @@
 package com.example.entity;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import com.example.repository.ProductOptionRepository;
+import com.example.service.ProductOptionService;
+
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,7 +35,7 @@ import lombok.ToString;
 
 @Table(name = "PRODUCT")
 public class Product {
-    
+
     @Id
     @Column(name = "PRODUCT_NO")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_PRODUCT_NO")
@@ -71,4 +80,36 @@ public class Product {
     @Column(name = "PRODUCT_DATE")
     @CreationTimestamp
     private Date productdate = null;
+
+    // @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    // private List<MemberCart> MemberCartlist = new ArrayList<MemberCart>();
+
+    // @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    // private List<ProductOption> ProductOptionlist = new ArrayList<ProductOption>();
+
+    // @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    // private List<ProductMainImage> ProductMainImagelist = new ArrayList<>();
+
+    // public void addProductMianImage(final ProductMainImage productMainImage){
+    //     ProductMainImagelist.add(productMainImage);
+    //     productMainImage.setProduct(this);
+    // }
+
+    // public void removeMainImage(final ProductMainImage productMainImage){
+    //     ProductMainImagelist.remove(productMainImage);
+    //     productMainImage.setProduct(null);
+    // }
+
+    // @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    // private List<ProductSubImage> ProductSubImagelist = new ArrayList<>();
+
+    // public void addProductSubImage(final ProductSubImage productSubImage){
+    //     ProductSubImagelist.add(productSubImage);
+    //     productSubImage.setProduct(this);
+    // }
+
+    // public void removeSubImage(final ProductSubImage productSubImage){
+    //     ProductSubImagelist.remove(productSubImage);
+    //     productSubImage.setProduct(null);
+    // }
 }

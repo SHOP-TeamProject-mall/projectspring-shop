@@ -1,7 +1,10 @@
 package com.example.entity;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -53,4 +57,7 @@ public class ProductOption {
     @ManyToOne
     @JoinColumn(name = "PRODUCT_NO")
     private Product product;
+
+    // @OneToMany(mappedBy = "ProductOption", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    // private ProductOptionImage ProductOptionImagelist = new ProductOptionImage();
 }
