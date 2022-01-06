@@ -53,9 +53,6 @@ public class ProductSubImage {
     @Column(name = "PRODUCTSUBIMAGE_IDX")
     private int productsubimageidx;
 
-    @Column
-    private String url;
-
     // 날짜타입 포멧설정
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
     @CreationTimestamp

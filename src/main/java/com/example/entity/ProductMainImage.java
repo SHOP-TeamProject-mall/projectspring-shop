@@ -49,9 +49,6 @@ public class ProductMainImage {
     @Column(name = "PRODUCTMAINIMAGE_TYPE")
     private String productmainimagetype = null; // 파일 종류
 
-    @Column
-    private String url;
-
     // 날짜타입 포멧설정
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
     @CreationTimestamp
