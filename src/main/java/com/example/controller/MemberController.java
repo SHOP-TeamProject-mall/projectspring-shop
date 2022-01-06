@@ -253,9 +253,8 @@ public class MemberController {
             BCryptPasswordEncoder bcpe = new BCryptPasswordEncoder();
             String newpw = bcpe.encode(member2.getMemberpw()); // 새 비밀번호
             String oldpw = member2.getMemberpw(); // 원래비밀번호
-            System.out.println("기존 비밀번호 : => "   + oldpw );
-            System.out.println("새 비밀번호   : => "   + newpw );
- 
+            System.out.println("기존 비밀번호 : => " + oldpw);
+            System.out.println("새 비밀번호   : => " + newpw);
 
             if (bcpe.matches(member2.getMemberpw(), oldpw)) { // 원래비밀번호 확인후 새비밀번호
                 Member member3 = new Member();
@@ -282,6 +281,30 @@ public class MemberController {
             map.put("ret", ret);
         } catch (Exception e) {
             map.put("fail", e.hashCode());
+        }
+        return map;
+    }
+
+    // 회원 마이페이지 이미지 수정
+    // 127.0.0.1:8080/HOST/member/memberiamgeupdate.json?memberid
+    @PostMapping(value = "/memberiamgeupdate.json", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Map<String, Object> UpdateMemberImage(@RequestParam(name = "memberid") String memberid,
+            @RequestParam(name = "updatefile") MultipartFile files) throws IOException {
+        // System.out.println(files.getOriginalFilename());
+        Map<String, Object> map = new HashMap<>();
+        try {
+            if (files != null ){
+                MemberJoinImage memberJoinImage = memberJoinImageRepository.findByMember_memberid(memberid);
+                memberJoinImage.setImage(files.getBytes());
+                memberJoinImage.setImagename(files.getOriginalFilename());
+                memberJoinImage.setImagesize(files.getSize());
+                memberJoinImage.setImagetype(files.getContentType());
+                memberJoinImageRepository.save(memberJoinImage);
+            }
+            map.put("sucess", 200);
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put("status", e.hashCode());
         }
         return map;
     }
