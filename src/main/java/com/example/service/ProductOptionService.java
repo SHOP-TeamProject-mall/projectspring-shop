@@ -2,12 +2,9 @@ package com.example.service;
 
 import java.util.List;
 
-import javax.transaction.Transactional;
 
-import com.example.entity.Product;
 import com.example.entity.ProductOption;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service

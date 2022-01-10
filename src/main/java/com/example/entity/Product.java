@@ -1,25 +1,21 @@
 package com.example.entity;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
+
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import com.example.repository.ProductOptionRepository;
-import com.example.service.ProductOptionService;
+
 
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.beans.factory.annotation.Autowired;
+
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
