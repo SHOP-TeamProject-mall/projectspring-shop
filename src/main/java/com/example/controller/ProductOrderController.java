@@ -1,9 +1,15 @@
 package com.example.controller;
 
+import com.example.entity.Member;
+import com.example.entity.Product;
+import com.example.entity.ProductOption;
 import com.example.entity.ProductOrder;
 import com.example.jwt.JwtUtil;
+import com.example.repository.MemberRepository;
+import com.example.repository.ProductOptionRepository;
 import com.example.repository.ProductOrderRepository;
-
+import com.example.service.ProductOrderService;
+import com.example.service.ProductService;
 
 import java.util.HashMap;
 import java.util.List;
@@ -34,11 +40,22 @@ public class ProductOrderController {
 
     @Autowired
     JwtUtil jwtUtil;
+
+    @Autowired
+    ProductOptionRepository productOptionRepository;
+
+    @Autowired
+    MemberRepository memberRepository;
+
+    @Autowired
+    ProductOrderService productOrderService;
     
     // 127.0.0.1:8080/HOST/order/insertorder.json
     @PostMapping(value="/insertorder.json", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Map<String, Object> InsertOrder(
-        @RequestBody ProductOrder productOrder
+        @RequestBody ProductOrder productOrder,
+        @RequestHeader("token") String token,
+        @RequestParam(name = "productoptionno") long productoptionno
         ) {
         Map<String, Object> map = new HashMap<>();
         try{
@@ -48,26 +65,37 @@ public class ProductOrderController {
             String ordernowtime = String.valueOf(nowTime1);
             String orderrandomnumber = String.valueOf(randomnumber);
 
-            ProductOrder productOrder2 = new ProductOrder();
-            productOrder2.setOrdernumber(ordernowtime+orderrandomnumber);
-            productOrder2.setOrder_productoptionno(productOrder.getOrder_productoptionno());
-            productOrder2.setOrder_productoptioncnt(productOrder.getOrder_productoptioncnt());
-            productOrder2.setOrder_productoptionsize(productOrder.getOrder_productoptionsize());
-            productOrder2.setOrder_productoptioncolor(productOrder.getOrder_productoptioncolor());
-            productOrder2.setOrder_deliveryfee(productOrder.getOrder_deliveryfee());
-            productOrder2.setOrder_deliveryfee_check(productOrder.getOrder_deliveryfee_check());
-            productOrder2.setReciever_name(productOrder.getReciever_name());
-            productOrder2.setReciever_phone(productOrder.getReciever_phone());
-            productOrder2.setReciever_zipcode(productOrder.getReciever_zipcode());
-            productOrder2.setReciever_address(productOrder.getReciever_address());
-            productOrder2.setOrder_amount_paid(productOrder.getOrder_amount_paid());
-            productOrder2.setReciever_detailed_address(productOrder.getReciever_detailed_address());
-            productOrder2.setIdx(productOrder.getIdx());
-            productOrder2.setUserid(productOrder.getUserid());
-            productOrder2.setProductname(productOrder.getProductname());
-
-            productOrderRepository.save(productOrder2);
+            ProductOption productOption = productOptionRepository.findByProductoptionno(productoptionno);
+            // Product product = productOption.getProduct();
+            // System.out.println(product+"9999999999999999999999999999999999999");
+            String memberid = jwtUtil.extractUsername(token);
+            Member member = memberRepository.findByMemberid(memberid);
             
+            // ProductOrder productOrder2 = new ProductOrder();
+            productOrder.setProductOption(productOption);
+            productOrder.setMember(member);
+            productOrder.setOrdernumber(ordernowtime+orderrandomnumber);
+
+            ProductOrder productOrder2 = productOrderService.insertProductOrder(productOrder);
+            // System.out.println(productOrder2.toString());
+            // productOrder2.setOrder_productoptionno(productOrder.getOrder_productoptionno());
+            // productOrder2.setOrder_productoptioncnt(productOrder.getOrder_productoptioncnt());
+            // productOrder2.setOrder_productoptionsize(productOrder.getOrder_productoptionsize());
+            // productOrder2.setOrder_productoptioncolor(productOrder.getOrder_productoptioncolor());
+            // productOrder2.setOrder_deliveryfee(productOrder.getOrder_deliveryfee());
+            // productOrder2.setOrder_deliveryfee_check(productOrder.getOrder_deliveryfee_check());
+            // productOrder2.setReciever_name(productOrder.getReciever_name());
+            // productOrder2.setReciever_phone(productOrder.getReciever_phone());
+            // productOrder2.setReciever_zipcode(productOrder.getReciever_zipcode());
+            // productOrder2.setReciever_address(productOrder.getReciever_address());
+            // productOrder2.setOrder_amount_paid(productOrder.getOrder_amount_paid());
+            // productOrder2.setReciever_detailed_address(productOrder.getReciever_detailed_address());
+            // productOrder2.setIdx(productOrder.getIdx());
+            // productOrder2.setUserid(productOrder.getUserid());
+            // productOrder2.setProductname(productOrder.getProductname());
+
+            // productOrderRepository.save(productOrder2);
+            map.put("order", productOrder2);
             map.put("status", 200);
         } 
         catch(Exception e){

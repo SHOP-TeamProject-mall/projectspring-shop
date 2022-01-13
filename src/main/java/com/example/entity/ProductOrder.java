@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -89,6 +91,14 @@ public class ProductOrder {
     @CreationTimestamp
     @Column(name = "REGDATE")
     private Date regdate;
+
+    @ManyToOne
+    @JoinColumn(name = "PRODUCTOPTION_NO")
+    private ProductOption productOption;
+
+    @ManyToOne
+    @JoinColumn(name = "MEMBER_ID")
+    private Member member;
     // 옵션별 정보(번호만 가지고오기) / 옵션별 총 가격 / 선택 수량, 사이즈, 컬러 / 배송비(묶음 구매시 i+1번째 배송비는 0원) / 배송비 결제 선택 (선결제,착불) / 배송지 주소 및 상세주소 우편번호 / 수취인이름 연락처
     // 
     

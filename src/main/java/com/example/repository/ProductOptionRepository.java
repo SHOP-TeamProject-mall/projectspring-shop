@@ -16,4 +16,6 @@ public interface ProductOptionRepository extends JpaRepository<ProductOption, Lo
     List<ProductOption> findAllByProduct_productno(Long no);
 
     ProductOption findByProductoptionno(Long productoptionno);
+
+    
 }
