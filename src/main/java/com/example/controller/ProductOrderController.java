@@ -150,6 +150,24 @@ public class ProductOrderController {
         }
         return map;
     }
+
+    // 127.0.0.1:8080/HOST/order/select_myorderlist_one.json?ordernumber=
+    @GetMapping(value = "/select_myorderlist_one.json", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Map<String, Object> SelectOneMyOrderList(
+        @RequestParam(name = "ordernumber") String ordernumber
+    ){
+        Map<String, Object> map = new HashMap<>();
+        try{
+            ProductOrder productOrder = productOrderRepository.findByOrdernumber(ordernumber);
+
+            map.put("orderlist", productOrder);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            map.put("status", e.hashCode());
+        }
+        return map;
+    }
     
     
     

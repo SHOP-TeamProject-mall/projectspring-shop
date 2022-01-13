@@ -2,6 +2,7 @@ package com.example.repository;
 
 import java.util.List;
 
+import com.example.entity.Product;
 import com.example.entity.ProductOrder;
 
 import org.springframework.data.domain.Pageable;
@@ -18,5 +19,5 @@ public interface ProductOrderRepository extends JpaRepository<ProductOrder, Long
 
     long countByUseridContaining(String userid);
 
-    
+    ProductOrder findByOrdernumber(String ordernumber);
 }
