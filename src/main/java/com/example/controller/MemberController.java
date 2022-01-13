@@ -140,8 +140,11 @@ public class MemberController {
     // 127.0.0.1:8080/HOST/member/memberJoinImage.json?no=
     @PostMapping(value = "/memberJoinImage.json", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Map<String, Object> memberJoinImage(@RequestParam(name = "no") String no,
-            @RequestParam(name = "file") MultipartFile files) throws IOException {
-        System.out.println("회원가입시 프로필 files : =>" + files);
+            @RequestParam(name = "file", required = false) MultipartFile files) throws IOException {
+
+        // file param이 files 데이터가 안올 경우 required를 이용해서 null 값 표현 (즉, 사용자가 이미지를 첨부안했을 경우)
+        System.out.println(" 회원가입시 프로필 files : => " + files);
+
         Map<String, Object> map = new HashMap<>();
         try {
             Member member = memberRepository.getById(no);
@@ -155,21 +158,47 @@ public class MemberController {
                 memberJoinImage.setImagetype(files.getContentType());
                 list.add(memberJoinImage);
                 memberJoinImageRepository.saveAll(list);
+            } else { // files 가 null 일 때 이미지 null 데이터를 삽입
+                
+                // List<MemberJoinImage> list = new ArrayList<>();
+                MemberJoinImage memberJoinImage = new MemberJoinImage();
+                memberJoinImage.setMember(member);
+                memberJoinImage.setImage(null); // byte
+                memberJoinImage.setImagename(""); // String
+                memberJoinImage.setImagesize(0L); // long
+                memberJoinImage.setImagetype(""); // String
+                // list.add(memberJoinImage);
+                memberJoinImageRepository.save(memberJoinImage);
             }
-            // } else {
-            // MemberJoinImage memberJoinImage = new MemberJoinImage();
-            // memberJoinImage.setMember(member);
-            // memberJoinImage.setImage(null); // byte
-            // memberJoinImage.setImagename(""); // String
-            // memberJoinImage.setImagesize(0L); // long
-            // memberJoinImage.setImagetype(""); // String
-            // memberJoinImageRepository.save(memberJoinImage);
-            // }
             map.put("status", 200);
         } catch (Exception e) {
             e.printStackTrace();
             map.put("status", e.hashCode());
 
+        }
+        return map;
+    }
+
+    //  마이페이지 회원 이미지 수정
+    // 127.0.0.1:8080/HOST/member/memberiamgeupdate.json?memberid
+    @PostMapping(value = "/memberiamgeupdate.json", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Map<String, Object> UpdateMemberImage(@RequestParam(name = "memberid") String memberid,
+            @RequestParam(name = "updatefile") MultipartFile files) throws IOException {
+        // System.out.println("회원 마이페이지 이미지 수정 => " + files);
+        Map<String, Object> map = new HashMap<>();
+        try {
+            if (files != null) {
+                MemberJoinImage memberJoinImage = memberJoinImageRepository.findByMember_memberid(memberid);
+                memberJoinImage.setImage(files.getBytes());
+                memberJoinImage.setImagename(files.getOriginalFilename());
+                memberJoinImage.setImagesize(files.getSize());
+                memberJoinImage.setImagetype(files.getContentType());
+                memberJoinImageRepository.save(memberJoinImage);
+            }
+            map.put("sucess", 200);
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put("status", e.hashCode());
         }
         return map;
     }
@@ -281,30 +310,6 @@ public class MemberController {
             map.put("ret", ret);
         } catch (Exception e) {
             map.put("fail", e.hashCode());
-        }
-        return map;
-    }
-
-    // 회원 마이페이지 이미지 수정
-    // 127.0.0.1:8080/HOST/member/memberiamgeupdate.json?memberid
-    @PostMapping(value = "/memberiamgeupdate.json", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Map<String, Object> UpdateMemberImage(@RequestParam(name = "memberid") String memberid,
-            @RequestParam(name = "updatefile") MultipartFile files) throws IOException {
-        // System.out.println(files.getOriginalFilename());
-        Map<String, Object> map = new HashMap<>();
-        try {
-            if (files != null ){
-                MemberJoinImage memberJoinImage = memberJoinImageRepository.findByMember_memberid(memberid);
-                memberJoinImage.setImage(files.getBytes());
-                memberJoinImage.setImagename(files.getOriginalFilename());
-                memberJoinImage.setImagesize(files.getSize());
-                memberJoinImage.setImagetype(files.getContentType());
-                memberJoinImageRepository.save(memberJoinImage);
-            }
-            map.put("sucess", 200);
-        } catch (Exception e) {
-            e.printStackTrace();
-            map.put("status", e.hashCode());
         }
         return map;
     }
