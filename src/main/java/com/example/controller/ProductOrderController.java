@@ -1,6 +1,7 @@
 package com.example.controller;
 
 import com.example.entity.ProductOrder;
+import com.example.jwt.JwtUtil;
 import com.example.repository.ProductOrderRepository;
 
 
@@ -10,6 +11,7 @@ import java.util.Map;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -28,6 +31,9 @@ public class ProductOrderController {
 
     @Autowired
     ProductOrderRepository productOrderRepository;
+
+    @Autowired
+    JwtUtil jwtUtil;
     
     // 127.0.0.1:8080/HOST/order/insertorder.json
     @PostMapping(value="/insertorder.json", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -58,6 +64,7 @@ public class ProductOrderController {
             productOrder2.setReciever_detailed_address(productOrder.getReciever_detailed_address());
             productOrder2.setIdx(productOrder.getIdx());
             productOrder2.setUserid(productOrder.getUserid());
+            productOrder2.setProductname(productOrder.getProductname());
 
             productOrderRepository.save(productOrder2);
             
@@ -89,6 +96,33 @@ public class ProductOrderController {
         }
         return map;
     }
+
+    // 주문완료 후 내 주문내역 조회(아이디값이 일치한 것만)
+    // 127.0.0.1:8080/HOST/order/select_myorderlist.json?page=
+    @GetMapping(value="/select_myorderlist.json", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Map<String, Object> SelectMyOrderList(
+        @RequestParam(name = "page", defaultValue = "0") int page,
+        @RequestHeader("token") String token ) {
+            PageRequest pageable = PageRequest.of(page - 1, 10);
+            String memberid = jwtUtil.extractUsername(token);
+            
+            List<ProductOrder> list = productOrderRepository.findByUseridOrderByOrdernoDesc(memberid, pageable);
+            
+            Map<String, Object> map = new HashMap<>();
+        try{
+            System.out.println("aaaaaaaa");
+            long pages = productOrderRepository.countByUseridContaining(memberid);
+            
+            map.put("ppage", (pages - 1) / 10 + 1);
+            map.put("list", list);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            map.put("status", e.hashCode());
+        }
+        return map;
+    }
+    
     
     
 }

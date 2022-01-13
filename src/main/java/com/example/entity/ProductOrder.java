@@ -37,6 +37,9 @@ public class ProductOrder {
     @Column(name = "ORDER_NUMBER")
     private String ordernumber;
 
+    @Column(name = "PRODUCTNAME")
+    private String productname;
+
     @Column(name = "ORDER_PRODUCTOPTIONNO")
     private Long order_productoptionno;
 
@@ -74,7 +77,7 @@ public class ProductOrder {
     private String reciever_detailed_address;
 
     @Column(name = "DELIVERY_STATUS")
-    private String delivery_status = "배송전";
+    private String delivery_status = "배송준비중";
 
     @Column(name = "USER_ID")
     private String userid;
